@@ -4,7 +4,7 @@ const { compilerOptions } = require('./tsconfig');
 
 module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
-  rootDir: './test/unit',
+  rootDir: './',
   testRegex: '.*\\.spec\\.ts$',
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: '<rootDir>',
