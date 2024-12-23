@@ -16,7 +16,7 @@ import { ProvidersModule } from '@shared/providers/providers.module';
           message: error.message,
           code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
           path: error.path || [],
-          details: error.extensions?.details || undefined,
+          details: error.extensions?.originalError || undefined,
         };
         return graphQLFormattedError;
       },
