@@ -31,10 +31,10 @@ describe('CreateChallengeService', () => {
 
       // Assert
       expect(result).toBeDefined();
-      expect(result).toBeInstanceOf(Challenge);
-      expect(result.id).toEqual(expect.any(String));
-      expect(result.title).toEqual(mockData.title);
-      expect(result.description).toEqual(mockData.description);
+      expect(result.data).toBeInstanceOf(Challenge);
+      expect(result.data.id).toEqual(expect.any(String));
+      expect(result.data.title).toEqual(mockData.title);
+      expect(result.data.description).toEqual(mockData.description);
       expect(challengesRepository.create).toHaveBeenCalledWith(
         expect.any(Challenge),
       );
