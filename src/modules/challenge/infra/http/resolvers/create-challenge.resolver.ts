@@ -2,7 +2,6 @@ import { CreateChallengeService } from '@modules/challenge/services/create-chall
 import { ChallengeModel } from '../models/challenge.model';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { CreateChallengeResponseModel } from '../models/create-challenge-response.model';
-// import { CreateChallengeInput } from './validations/create-challenge-validation.pipe';
 import { CreateChallengeInput } from '../inputs/create-challenge.input';
 
 @Resolver(() => ChallengeModel)
