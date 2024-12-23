@@ -1,15 +1,15 @@
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
 import { DateScalar } from '@shared/infra/scalar-types/date.scalar';
+import { ChallengesRepository } from './repositories/challenges.repository';
+import { PrismaChallengesRepository } from './infra/db/repositories/prisma-challenges.repository';
 
 @Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
-    }),
+  providers: [
+    DateScalar,
+    {
+      provide: ChallengesRepository,
+      useClass: PrismaChallengesRepository,
+    },
   ],
-  providers: [DateScalar],
 })
 export class ChallengeModule {}

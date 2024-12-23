@@ -4,6 +4,7 @@ import { AppResolver } from './app.resolver';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ChallengeModule } from './modules/challenge/challenge.module';
+import { ProvidersModule } from '@shared/providers/providers.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ChallengeModule } from './modules/challenge/challenge.module';
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
     }),
+    ProvidersModule,
     ChallengeModule,
   ],
   providers: [AppResolver, AppService],
