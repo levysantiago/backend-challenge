@@ -1,9 +1,7 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
-import { AppResolver } from './app.resolver';
-import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ChallengeModule } from './modules/challenge/challenge.module';
+import { DateScalar } from '@shared/infra/scalar-types/date.scalar';
 
 @Module({
   imports: [
@@ -11,8 +9,7 @@ import { ChallengeModule } from './modules/challenge/challenge.module';
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
     }),
-    ChallengeModule,
   ],
-  providers: [AppResolver, AppService],
+  providers: [DateScalar],
 })
-export class AppModule {}
+export class ChallengeModule {}
