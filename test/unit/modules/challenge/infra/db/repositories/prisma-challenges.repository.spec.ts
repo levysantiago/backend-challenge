@@ -3,7 +3,7 @@ import { PrismaChallengesMapper } from '@modules/challenge/infra/db/mappers/pris
 import { PrismaChallengesRepository } from '@modules/challenge/infra/db/repositories/prisma-challenges.repository';
 import { MockProxy } from 'jest-mock-extended';
 import { PrismaDatabaseProvider } from '@shared/providers/database-provider/implementations/prisma-database.provider';
-import { FakePrismaDatabaseProvider } from '@test/mock/fake-prisma-database-provider';
+import { FakePrismaDatabaseProvider } from '@test/mock/fake-prisma-database-provider.mock';
 
 describe('PrismaChallengesRepository', () => {
   let sut: PrismaChallengesRepository;
