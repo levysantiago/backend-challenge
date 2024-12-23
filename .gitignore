@@ -41,3 +41,4 @@ schema.gql
 .husky
 
 # environmental variables
+.env
