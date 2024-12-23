@@ -11,6 +11,15 @@ import { ProvidersModule } from '@shared/providers/providers.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
+      formatError: (error) => {
+        const graphQLFormattedError = {
+          message: error.message,
+          code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
+          path: error.path || [],
+          details: error.extensions?.details || undefined,
+        };
+        return graphQLFormattedError;
+      },
     }),
     ProvidersModule,
     ChallengeModule,
