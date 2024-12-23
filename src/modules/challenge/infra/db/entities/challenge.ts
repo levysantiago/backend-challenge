@@ -1,5 +1,5 @@
-import { ICreateChallengeDTO } from '@modules/challenge/dtos/create-challenge.dto';
-import { randomUUID } from 'crypto';
+import { ICreateChallengeDTO } from '@modules/challenge/dtos/icreate-challenge.dto';
+import { randomUUID } from 'node:crypto';
 
 /**
  * The representation of Challenge DB registry in the application.
@@ -10,7 +10,7 @@ export class Challenge {
   description: string;
   createdAt: Date;
 
-  constructor(props: ICreateChallengeDTO, id: string) {
+  constructor(props: ICreateChallengeDTO, id?: string) {
     this.title = props.title;
     this.description = props.description;
 
