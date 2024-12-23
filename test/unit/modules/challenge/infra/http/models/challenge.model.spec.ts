@@ -1,4 +1,4 @@
-import { ChallengeModel } from '@modules/challenge/infra/models/challenge.model';
+import { ChallengeModel } from '@modules/challenge/infra/http/models/challenge.model';
 
 describe('ChallengeModel', () => {
   it('should create an instance with the correct properties', () => {
