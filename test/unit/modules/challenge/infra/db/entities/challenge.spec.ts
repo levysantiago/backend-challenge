@@ -1,4 +1,4 @@
-import { ICreateChallengeDTO } from '@modules/challenge/dtos/create-challenge.dto';
+import { ICreateChallengeDTO } from '@modules/challenge/dtos/icreate-challenge.dto';
 import { Challenge } from '@modules/challenge/infra/db/entities/challenge';
 
 describe('Challenge', () => {
