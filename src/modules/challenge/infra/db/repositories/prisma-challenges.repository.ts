@@ -72,10 +72,16 @@ export class PrismaChallengesRepository implements ChallengesRepository {
     };
   }
 
-  async remove(challenge: Challenge): Promise<void> {
-    await this.prismaService.challenge.delete({
-      where: { id: challenge.id },
-    });
+  async delete(challengeId: string): Promise<Challenge | null> {
+    try {
+      const rawChallenge = await this.prismaService.challenge.delete({
+        where: { id: challengeId },
+      });
+
+      return PrismaChallengesMapper.fromPrisma(rawChallenge);
+    } catch (err) {
+      return null;
+    }
   }
 
   private _buildQueryByFilter(

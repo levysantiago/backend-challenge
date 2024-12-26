@@ -20,13 +20,13 @@ describe('CreateChallengeService', () => {
   });
 
   describe('execute', () => {
-    it('should create a new challenge and persist it', async () => {
-      // Arrange
-      const mockData: ICreateChallengeDTO = {
-        title: 'Test Challenge',
-        description: 'This is a test challenge',
-      };
+    // Arrange
+    const mockData: ICreateChallengeDTO = {
+      title: 'Test Challenge',
+      description: 'This is a test challenge',
+    };
 
+    it('should create a new challenge and persist it', async () => {
       // Act
       const result = await sut.execute(mockData);
 
@@ -45,12 +45,6 @@ describe('CreateChallengeService', () => {
       jest
         .spyOn(challengesRepository, 'create')
         .mockRejectedValueOnce(new Error());
-
-      // Arrange
-      const mockData: ICreateChallengeDTO = {
-        title: 'Test Challenge',
-        description: 'This is a test challenge',
-      };
 
       // Act
       const promise = sut.execute(mockData);

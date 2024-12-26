@@ -39,6 +39,10 @@ describe('PrismaChallengesRepository', () => {
       .spyOn(prismaService.challenge, 'findMany')
       .mockResolvedValue(fakeChallenges);
 
+    jest
+      .spyOn(prismaService.challenge, 'delete')
+      .mockResolvedValue(fakePrismaChallenge);
+
     jest.spyOn(prismaService.challenge, 'count').mockResolvedValue(fakeCount);
 
     jest
@@ -114,7 +118,10 @@ describe('PrismaChallengesRepository', () => {
     function _beforeEach() {
       jest
         .spyOn(PrismaChallengesMapper, 'fromPrisma')
-        .mockImplementation((data) =>
+        .mockImplementationOnce((data) =>
+          fakeChallenges.find((challenge) => challenge.id === data.id),
+        )
+        .mockImplementationOnce((data) =>
           fakeChallenges.find((challenge) => challenge.id === data.id),
         );
     }
@@ -189,11 +196,7 @@ describe('PrismaChallengesRepository', () => {
     });
 
     it('should call PrismaChallengesMapper.fromPrisma with right parameters', async () => {
-      jest
-        .spyOn(PrismaChallengesMapper, 'fromPrisma')
-        .mockImplementation((data) =>
-          fakeChallenges.find((challenge) => challenge.id === data.id),
-        );
+      _beforeEach();
 
       await sut.findBy(
         { title: 'fake-title' },
@@ -217,17 +220,19 @@ describe('PrismaChallengesRepository', () => {
     });
   });
 
-  describe('remove', () => {
-    it('should delete a challenge from the database', async () => {
-      const mockChallenge = new Challenge(
-        { title: 'Test Title', description: 'Test Description' },
-        '123',
-      );
+  describe('delete', () => {
+    it('should be able to delete a challenge', async () => {
+      // Act
+      const result = await sut.delete('fake_id');
+      // Assert
+      expect(result).toEqual(fakePrismaChallenge);
+    });
 
-      await sut.remove(mockChallenge);
+    it('should be able to call prismaService.challenge.delete with right parameters', async () => {
+      await sut.delete('fake_id');
 
       expect(prismaService.challenge.delete).toHaveBeenCalledWith({
-        where: { id: mockChallenge.id },
+        where: { id: 'fake_id' },
       });
     });
   });

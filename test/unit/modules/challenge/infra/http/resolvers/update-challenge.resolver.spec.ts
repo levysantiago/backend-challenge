@@ -26,7 +26,7 @@ describe('UpdateChallengeResolver', () => {
     sut = new UpdateChallengeResolver(updateChallengeService);
   });
 
-  describe('createChallenge', () => {
+  describe('updateChallenge', () => {
     // Arrange
     const mockInput: UpdateChallengeInput = {
       id: 'fake-id',
