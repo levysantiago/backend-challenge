@@ -4,6 +4,7 @@ import { ICreateChallengeResponseDTO } from '../dtos/icreate-challenge-response.
 import { IUpdateChallengeDTO } from '../dtos/iupdate-challenge.dto';
 import { ChallengeNotFoundError } from '../infra/errors/challenge-not-found.error';
 import { UpdateChallengeError } from '../infra/errors/update-challenge.error';
+import { AppError } from '@shared/resources/errors/app.error';
 
 @Injectable()
 export class UpdateChallengeService {
@@ -23,11 +24,12 @@ export class UpdateChallengeService {
       data.description ? (challenge.description = data.description) : undefined;
 
       // Persist challenge updates
-      this.challengesRepository.save(challenge);
+      await this.challengesRepository.save(challenge);
 
       // Return challenge
       return { data: challenge };
     } catch (err) {
+      if (err instanceof AppError) throw err;
       throw new UpdateChallengeError();
     }
   }
