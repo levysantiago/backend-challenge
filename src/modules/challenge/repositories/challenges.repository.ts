@@ -11,5 +11,5 @@ export abstract class ChallengesRepository {
     filter: IFindChallengesFilter,
     options: ISearchOptions,
   ): Promise<IFindChallengesResponse>;
-  abstract remove(challenge: Challenge): Promise<void>;
+  abstract delete(challengeId: string): Promise<Challenge | null>;
 }

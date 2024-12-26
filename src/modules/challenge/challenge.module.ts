@@ -8,6 +8,8 @@ import { UpdateChallengeService } from './services/update-challenge.service';
 import { UpdateChallengeResolver } from './infra/http/resolvers/update-challenge.resolver';
 import { ListChallengesService } from './services/list-challenges.service';
 import { ListChallengesResolver } from './infra/http/resolvers/list-challenges.resolver';
+import { DeleteChallengeResolver } from './infra/http/resolvers/delete-challenge.resolver';
+import { DeleteChallengeService } from './services/delete-challenge.service';
 
 @Module({
   providers: [
@@ -24,11 +26,13 @@ import { ListChallengesResolver } from './infra/http/resolvers/list-challenges.r
     CreateChallengeService,
     UpdateChallengeService,
     ListChallengesService,
+    DeleteChallengeService,
 
     // Resolvers
     CreateChallengeResolver,
     UpdateChallengeResolver,
     ListChallengesResolver,
+    DeleteChallengeResolver,
   ],
 })
 export class ChallengeModule {}
