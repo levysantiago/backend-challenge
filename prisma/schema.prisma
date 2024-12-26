@@ -14,8 +14,30 @@ datasource db {
 }
 
 model Challenge {
-  id          String   @id
+  id          String   @id @default(uuid())
   title       String
   description String
   createdAt   DateTime @default(now())
+  answers     Answer[]
+
+  @@map("challenges")
+}
+
+model Answer {
+  id            String   @id @default(uuid())
+  challengeId   String
+  repositoryUrl String
+  grade         Int?
+  status        Status   @default(PENDING)
+  createdAt     DateTime @default(now())
+
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@map("answers")
+}
+
+enum Status {
+  PENDING
+  ERROR
+  DONE
 }
