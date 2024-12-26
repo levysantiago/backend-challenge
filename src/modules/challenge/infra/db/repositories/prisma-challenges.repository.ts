@@ -22,6 +22,15 @@ export class PrismaChallengesRepository implements ChallengesRepository {
     });
   }
 
+  async find(id: string): Promise<Challenge> {
+    const rawChallenge = await this.prismaService.challenge.findUnique({
+      where: {
+        id,
+      },
+    });
+    return PrismaChallengesMapper.fromPrisma(rawChallenge);
+  }
+
   async findByTitle(
     title: string,
     options: ISearchOptions = {},

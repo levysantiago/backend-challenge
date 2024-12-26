@@ -1,8 +1,8 @@
 import { CreateChallengeService } from '@modules/challenge/services/create-challenge.service';
 import { ChallengeModel } from '../models/challenge.model';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { CreateChallengeResponseModel } from '../models/create-challenge-response.model';
 import { CreateChallengeInput } from '../inputs/create-challenge.input';
+import { ChallengeResponseDataModel } from '../models/challenge-response-data.model';
 
 @Resolver(() => ChallengeModel)
 export class CreateChallengeResolver {
@@ -10,10 +10,10 @@ export class CreateChallengeResolver {
     private readonly createChallengeService: CreateChallengeService,
   ) {}
 
-  @Mutation(() => CreateChallengeResponseModel)
+  @Mutation(() => ChallengeResponseDataModel)
   async createChallenge(
     @Args('newChallengeData') newChallengeData: CreateChallengeInput,
-  ): Promise<CreateChallengeResponseModel> {
+  ): Promise<ChallengeResponseDataModel> {
     // Execute service
     return await this.createChallengeService.execute({
       title: newChallengeData.title,

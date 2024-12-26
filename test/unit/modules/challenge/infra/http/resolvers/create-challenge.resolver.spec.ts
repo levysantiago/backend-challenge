@@ -1,5 +1,5 @@
 import { CreateChallengeInput } from '@modules/challenge/infra/http/inputs/create-challenge.input';
-import { CreateChallengeResponseModel } from '@modules/challenge/infra/http/models/create-challenge-response.model';
+import { ChallengeResponseDataModel } from '@modules/challenge/infra/http/models/challenge-response-data.model';
 import { CreateChallengeResolver } from '@modules/challenge/infra/http/resolvers/create-challenge.resolver';
 import { CreateChallengeService } from '@modules/challenge/services/create-challenge.service';
 import { mock, MockProxy } from 'jest-mock-extended';
@@ -8,7 +8,7 @@ describe('CreateChallengeResolver', () => {
   let sut: CreateChallengeResolver;
   let createChallengeService: MockProxy<CreateChallengeService>;
 
-  const mockResponse: CreateChallengeResponseModel = {
+  const mockResponse: ChallengeResponseDataModel = {
     data: {
       id: '1',
       title: 'Test Challenge',
