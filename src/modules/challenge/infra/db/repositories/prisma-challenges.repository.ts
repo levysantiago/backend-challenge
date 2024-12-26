@@ -22,12 +22,17 @@ export class PrismaChallengesRepository implements ChallengesRepository {
     });
   }
 
-  async find(id: string): Promise<Challenge> {
+  async find(id: string): Promise<Challenge | null> {
     const rawChallenge = await this.prismaService.challenge.findUnique({
       where: {
         id,
       },
     });
+
+    if (!rawChallenge) {
+      return null;
+    }
+
     return PrismaChallengesMapper.fromPrisma(rawChallenge);
   }
 
