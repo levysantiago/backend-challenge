@@ -9,7 +9,7 @@ describe('PrismaChallengesRepository', () => {
   let sut: PrismaChallengesRepository;
   let prismaService: MockProxy<PrismaDatabaseProvider>;
 
-  const fakePrismaChallenge = {
+  const fakePrismaChallenge: Challenge = {
     id: '123',
     title: 'Test Title',
     description: 'Test Description',
@@ -30,6 +30,10 @@ describe('PrismaChallengesRepository', () => {
 
     // Mock PrismaDatabaseProvider
     jest
+      .spyOn(prismaService.challenge, 'findUnique')
+      .mockResolvedValue(fakePrismaChallenge);
+
+    jest
       .spyOn(prismaService.challenge, 'findMany')
       .mockResolvedValue(fakeChallenges);
 
@@ -40,9 +44,7 @@ describe('PrismaChallengesRepository', () => {
 
     jest
       .spyOn(PrismaChallengesMapper, 'fromPrisma')
-      .mockImplementation((data) =>
-        fakeChallenges.find((challenge) => challenge.id === data.id),
-      );
+      .mockReturnValue(fakePrismaChallenge);
   });
 
   beforeEach(async () => {
@@ -86,16 +88,36 @@ describe('PrismaChallengesRepository', () => {
     });
   });
 
+  describe('find', () => {
+    it('should find challenges by title', async () => {
+      const result = await sut.find('fake-id');
+
+      expect(prismaService.challenge.findUnique).toHaveBeenCalledWith({
+        where: { id: 'fake-id' },
+      });
+      expect(PrismaChallengesMapper.fromPrisma).toHaveBeenCalledWith(
+        fakePrismaChallenge,
+      );
+      expect(result).toEqual(fakePrismaChallenge);
+    });
+  });
+
   describe('findByTitle', () => {
     it('should find challenges by title', async () => {
+      jest
+        .spyOn(PrismaChallengesMapper, 'fromPrisma')
+        .mockImplementation((data) =>
+          fakeChallenges.find((challenge) => challenge.id === data.id),
+        );
+
       const result = await sut.findByTitle('Title', { order: 'desc' });
 
       expect(prismaService.challenge.findMany).toHaveBeenCalledWith({
         where: { title: { contains: 'Title' } },
         orderBy: { createdAt: 'desc' },
       });
-      expect(PrismaChallengesMapper.fromPrisma).toHaveBeenCalledTimes(
-        fakePrismaChallenges.length,
+      expect(PrismaChallengesMapper.fromPrisma).toHaveBeenCalledWith(
+        fakePrismaChallenge,
       );
       expect(result).toEqual(fakeChallenges);
     });
@@ -103,6 +125,12 @@ describe('PrismaChallengesRepository', () => {
 
   describe('findByDescription', () => {
     it('should find challenges by description', async () => {
+      jest
+        .spyOn(PrismaChallengesMapper, 'fromPrisma')
+        .mockImplementation((data) =>
+          fakeChallenges.find((challenge) => challenge.id === data.id),
+        );
+
       const result = await sut.findByDescription('Description', {
         order: 'asc',
       });
