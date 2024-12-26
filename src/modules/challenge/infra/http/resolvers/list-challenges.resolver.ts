@@ -12,8 +12,6 @@ export class ListChallengesResolver {
   async listChallenges(
     @Args('listChallengesData') listChallengesData: ListChallengesInput,
   ): Promise<ChallengesListResponseDataModel> {
-    console.log(listChallengesData);
-
     // Execute service
     return await this.listChallengeService.execute({
       filter: listChallengesData.filter,
