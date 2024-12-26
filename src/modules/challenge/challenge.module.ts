@@ -6,6 +6,8 @@ import { CreateChallengeService } from './services/create-challenge.service';
 import { CreateChallengeResolver } from './infra/http/resolvers/create-challenge.resolver';
 import { UpdateChallengeService } from './services/update-challenge.service';
 import { UpdateChallengeResolver } from './infra/http/resolvers/update-challenge.resolver';
+import { ListChallengesService } from './services/list-challenges.service';
+import { ListChallengesResolver } from './infra/http/resolvers/list-challenges.resolver';
 
 @Module({
   providers: [
@@ -21,10 +23,12 @@ import { UpdateChallengeResolver } from './infra/http/resolvers/update-challenge
     // Services
     CreateChallengeService,
     UpdateChallengeService,
+    ListChallengesService,
 
     // Resolvers
     CreateChallengeResolver,
     UpdateChallengeResolver,
+    ListChallengesResolver,
   ],
 })
 export class ChallengeModule {}

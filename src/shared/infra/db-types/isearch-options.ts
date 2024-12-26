@@ -1,3 +1,5 @@
 export interface ISearchOptions {
-  order?: 'asc' | 'desc';
+  orderBy?: 'asc' | 'desc';
+  limit?: number;
+  page?: number;
 }

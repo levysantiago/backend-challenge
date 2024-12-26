@@ -16,6 +16,8 @@ describe('PrismaChallengesRepository', () => {
     createdAt: new Date(),
   };
 
+  const fakeCount = 10;
+
   const fakePrismaChallenges = [
     { id: '1', title: 'Title 1', description: 'Description 1' },
     { id: '2', title: 'Title 2', description: 'Description 2' },
@@ -36,6 +38,12 @@ describe('PrismaChallengesRepository', () => {
     jest
       .spyOn(prismaService.challenge, 'findMany')
       .mockResolvedValue(fakeChallenges);
+
+    jest.spyOn(prismaService.challenge, 'count').mockResolvedValue(fakeCount);
+
+    jest
+      .spyOn(prismaService, '$transaction')
+      .mockResolvedValue([10, fakeChallenges]);
 
     // Mock PrismaChallengesMapper
     jest
@@ -102,44 +110,110 @@ describe('PrismaChallengesRepository', () => {
     });
   });
 
-  describe('findByTitle', () => {
-    it('should find challenges by title', async () => {
+  describe('findBy', () => {
+    function _beforeEach() {
+      jest
+        .spyOn(PrismaChallengesMapper, 'fromPrisma')
+        .mockImplementation((data) =>
+          fakeChallenges.find((challenge) => challenge.id === data.id),
+        );
+    }
+
+    it('should find challenges by filter', async () => {
+      _beforeEach();
+
+      const result = await sut.findBy(
+        { title: 'fake-title' },
+        { page: 1, limit: 10, orderBy: 'desc' },
+      );
+
+      expect(result).toEqual({ challenges: fakeChallenges, total: fakeCount });
+    });
+
+    it('should call _buildQueryByFilter function with right parameters', async () => {
+      _beforeEach();
+
+      const spy = jest.spyOn(sut as any, '_buildQueryByFilter');
+
+      await sut.findBy(
+        { title: 'fake_title' },
+        { page: 1, limit: 10, orderBy: 'desc' },
+      );
+
+      expect(spy).toHaveBeenCalledWith({
+        title: 'fake_title',
+      });
+    });
+
+    it('should call prismaService.challenge.findMany function with right parameters', async () => {
+      _beforeEach();
+
+      await sut.findBy(
+        { title: 'fake_title' },
+        { page: 1, limit: 10, orderBy: 'desc' },
+      );
+
+      expect(prismaService.challenge.findMany).toHaveBeenCalledWith({
+        where: { title: { contains: 'fake_title' } },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+        skip: 0,
+      });
+    });
+
+    it('should call prismaService.challenge.count function with right parameters', async () => {
+      _beforeEach();
+
+      await sut.findBy(
+        { title: 'fake_title' },
+        { page: 1, limit: 10, orderBy: 'desc' },
+      );
+
+      expect(prismaService.challenge.count).toHaveBeenCalledWith({
+        where: { title: { contains: 'fake_title' } },
+      });
+    });
+
+    it('should call prismaService.$transaction function with right parameters', async () => {
+      _beforeEach();
+
+      await sut.findBy(
+        { title: 'fake_title' },
+        { page: 1, limit: 10, orderBy: 'desc' },
+      );
+
+      expect(prismaService.$transaction).toHaveBeenCalledWith([
+        expect.any(Promise),
+        expect.any(Promise),
+      ]);
+    });
+
+    it('should call PrismaChallengesMapper.fromPrisma with right parameters', async () => {
       jest
         .spyOn(PrismaChallengesMapper, 'fromPrisma')
         .mockImplementation((data) =>
           fakeChallenges.find((challenge) => challenge.id === data.id),
         );
 
-      const result = await sut.findByTitle('Title', { order: 'desc' });
+      await sut.findBy(
+        { title: 'fake-title' },
+        { page: 1, limit: 10, orderBy: 'desc' },
+      );
 
-      expect(prismaService.challenge.findMany).toHaveBeenCalledWith({
-        where: { title: { contains: 'Title' } },
-        orderBy: { createdAt: 'desc' },
-      });
       expect(PrismaChallengesMapper.fromPrisma).toHaveBeenCalledWith(
         fakePrismaChallenge,
       );
-      expect(result).toEqual(fakeChallenges);
     });
   });
 
-  describe('findByDescription', () => {
-    it('should find challenges by description', async () => {
-      jest
-        .spyOn(PrismaChallengesMapper, 'fromPrisma')
-        .mockImplementation((data) =>
-          fakeChallenges.find((challenge) => challenge.id === data.id),
-        );
+  describe('_buildQueryByFilter', () => {
+    it('should build the query through the filter', () => {
+      // eslint-disable-next-line prettier/prettier
+      const result = sut["_buildQueryByFilter"]({title: "fake_title"});
 
-      const result = await sut.findByDescription('Description', {
-        order: 'asc',
+      expect(result).toEqual({
+        title: { contains: 'fake_title' },
       });
-
-      expect(prismaService.challenge.findMany).toHaveBeenCalledWith({
-        where: { description: { contains: 'Description' } },
-        orderBy: { createdAt: 'asc' },
-      });
-      expect(result).toEqual(fakeChallenges);
     });
   });
 
