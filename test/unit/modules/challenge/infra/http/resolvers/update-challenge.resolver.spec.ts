@@ -1,5 +1,5 @@
+import { IUpdateChallengeResponseDTO } from '@modules/challenge/dtos/iupdate-challenge-response.dto';
 import { UpdateChallengeInput } from '@modules/challenge/infra/http/inputs/update-challenge.input';
-import { ChallengeResponseDataModel } from '@modules/challenge/infra/http/models/challenge-response-data.model';
 import { UpdateChallengeResolver } from '@modules/challenge/infra/http/resolvers/update-challenge.resolver';
 import { UpdateChallengeService } from '@modules/challenge/services/update-challenge.service';
 import { mock, MockProxy } from 'jest-mock-extended';
@@ -8,7 +8,7 @@ describe('UpdateChallengeResolver', () => {
   let sut: UpdateChallengeResolver;
   let updateChallengeService: MockProxy<UpdateChallengeService>;
 
-  const mockResponse: ChallengeResponseDataModel = {
+  const mockResponse: IUpdateChallengeResponseDTO = {
     data: {
       id: '1',
       title: 'Test Challenge',

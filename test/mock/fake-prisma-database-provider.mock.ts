@@ -5,5 +5,8 @@ export class FakePrismaDatabaseProvider {
     findMany: jest.fn(),
     findUnique: jest.fn(),
     delete: jest.fn(),
+    count: jest.fn(),
   };
+
+  $transaction = jest.fn();
 }

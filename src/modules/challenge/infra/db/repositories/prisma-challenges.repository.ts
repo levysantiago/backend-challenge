@@ -4,6 +4,13 @@ import { Challenge } from '../entities/challenge';
 import { ChallengesRepository } from '@modules/challenge/repositories/challenges.repository';
 import { Injectable } from '@nestjs/common';
 import { ISearchOptions } from '@shared/infra/db-types/isearch-options';
+import { IFindChallengesFilter } from '../types/ifind-challenges-filter';
+import { IFindChallengesResponse } from '../types/ifind-challenges-response';
+
+interface IFindChallengesQuery {
+  title?: { contains: string };
+  description?: { contains: string };
+}
 
 @Injectable()
 export class PrismaChallengesRepository implements ChallengesRepository {
@@ -36,39 +43,58 @@ export class PrismaChallengesRepository implements ChallengesRepository {
     return PrismaChallengesMapper.fromPrisma(rawChallenge);
   }
 
-  async findByTitle(
-    title: string,
+  async findBy(
+    filter: IFindChallengesFilter = {},
     options: ISearchOptions = {},
-  ): Promise<Challenge[]> {
-    const rawChallenges = await this.prismaService.challenge.findMany({
-      where: {
-        title: {
-          contains: title,
-        },
-      },
-      orderBy: { createdAt: options.order ?? 'asc' },
-    });
-    return rawChallenges.map(PrismaChallengesMapper.fromPrisma);
-  }
+  ): Promise<IFindChallengesResponse> {
+    // Handling pagination variables
+    const _page = options.page ?? 1;
+    const _take = options.limit ?? 20;
 
-  async findByDescription(
-    description: string,
-    options: ISearchOptions = {},
-  ): Promise<Challenge[]> {
-    const rawChallenges = await this.prismaService.challenge.findMany({
-      where: {
-        description: {
-          contains: description,
-        },
-      },
-      orderBy: { createdAt: options.order ?? 'asc' },
-    });
-    return rawChallenges.map(PrismaChallengesMapper.fromPrisma);
+    // Building query
+    const query = this._buildQueryByFilter(filter);
+
+    // Finding challenges based on query and pagination data
+    const [count, rawChallenges] = await this.prismaService.$transaction([
+      this.prismaService.challenge.count({ where: query }),
+      this.prismaService.challenge.findMany({
+        where: query,
+        orderBy: { createdAt: options.orderBy ?? 'asc' },
+        take: _take,
+        skip: (_page - 1) * _take,
+      }),
+    ]);
+
+    // Parsing
+    return {
+      total: count,
+      challenges: rawChallenges.map(PrismaChallengesMapper.fromPrisma),
+    };
   }
 
   async remove(challenge: Challenge): Promise<void> {
     await this.prismaService.challenge.delete({
       where: { id: challenge.id },
     });
+  }
+
+  private _buildQueryByFilter(
+    filter: IFindChallengesFilter = {},
+  ): IFindChallengesQuery {
+    // Building query
+    const query = {};
+    if (filter.title) {
+      query['title'] = {
+        contains: filter.title,
+      };
+    }
+
+    if (filter.description) {
+      query['description'] = {
+        contains: filter.description,
+      };
+    }
+
+    return query;
   }
 }
