@@ -1,7 +1,7 @@
 import { ICreateChallengeDTO } from '@modules/challenge/dtos/icreate-challenge.dto';
 import { Challenge } from '@modules/challenge/infra/db/entities/challenge';
 
-describe('Challenge', () => {
+describe('Challenge Entity', () => {
   it('should create a Challenge instance with provided properties and generate defaults if not provided', () => {
     // Arrange
     const props: ICreateChallengeDTO = {
