@@ -1,5 +1,5 @@
-import { ICreateChallengeDTO } from '@modules/challenge/dtos/icreate-challenge.dto';
 import { randomUUID } from 'node:crypto';
+import { ICreateChallengeEntityDTO } from '../dtos/icreate-challenge-entity.dto';
 
 /**
  * The Application representation of a Challenge.
@@ -10,7 +10,7 @@ export class Challenge {
   description: string;
   createdAt: Date;
 
-  constructor(props: ICreateChallengeDTO, id?: string) {
+  constructor(props: ICreateChallengeEntityDTO, id?: string) {
     this.title = props.title;
     this.description = props.description;
 

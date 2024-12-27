@@ -1,10 +1,10 @@
-import { ICreateChallengeDTO } from '@modules/challenge/dtos/icreate-challenge.dto';
+import { ICreateChallengeEntityDTO } from '@modules/challenge/infra/db/dtos/icreate-challenge-entity.dto';
 import { Challenge } from '@modules/challenge/infra/db/entities/challenge';
 
 describe('Challenge Entity', () => {
   it('should create a Challenge instance with provided properties and generate defaults if not provided', () => {
     // Arrange
-    const props: ICreateChallengeDTO = {
+    const props: ICreateChallengeEntityDTO = {
       title: 'Test Challenge',
       description: 'This is a test challenge',
     };
@@ -25,7 +25,7 @@ describe('Challenge Entity', () => {
     // Arrange
     const id = 'specific-id';
     const createdAt = new Date('2024-01-01T00:00:00Z');
-    const props: ICreateChallengeDTO = {
+    const props: ICreateChallengeEntityDTO = {
       title: 'Specific Challenge',
       description: 'This challenge has specific id and createdAt',
       createdAt,
@@ -41,7 +41,7 @@ describe('Challenge Entity', () => {
 
   it('should generate a new id if none is provided', () => {
     // Arrange
-    const props: ICreateChallengeDTO = {
+    const props: ICreateChallengeEntityDTO = {
       title: 'Challenge Without ID',
       description: 'This challenge should generate an ID',
     };
@@ -56,7 +56,7 @@ describe('Challenge Entity', () => {
 
   it('should set createdAt to the current date if not provided', () => {
     // Arrange
-    const props: ICreateChallengeDTO = {
+    const props: ICreateChallengeEntityDTO = {
       title: 'Challenge Without CreatedAt',
       description: 'This challenge should use the current date',
     };

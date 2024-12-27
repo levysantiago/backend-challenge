@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ChallengesRepository } from '../repositories/challenges.repository';
-import { IListChallengesDTO } from '../dtos/ilist-challenges.dto';
-import { IListChallengesResponseDTO } from '../dtos/ilist-challenges-response.dto';
 import { ListChallengesError } from '../infra/errors/list-challenges.error';
+import { IListChallengesServiceDTO } from './dtos/ilist-challenges-service.dto';
+import { IListChallengesServiceResponseDTO } from './dtos/ilist-challenges-service-response.dto';
 
 @Injectable()
 export class ListChallengesService {
@@ -13,7 +13,7 @@ export class ListChallengesService {
     page,
     limit,
     orderBy,
-  }: IListChallengesDTO): Promise<IListChallengesResponseDTO> {
+  }: IListChallengesServiceDTO): Promise<IListChallengesServiceResponseDTO> {
     try {
       // Find challenges by filter
       const { challenges, total } = await this.challengesRepository.findBy(

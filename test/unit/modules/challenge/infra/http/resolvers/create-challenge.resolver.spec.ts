@@ -1,4 +1,4 @@
-import { ICreateChallengeResponseDTO } from '@modules/challenge/dtos/icreate-challenge-response.dto';
+import { ICreateChallengeServiceResponseDTO } from '@modules/challenge/services/dtos/icreate-challenge-service-response.dto';
 import { CreateChallengeInput } from '@modules/challenge/infra/http/inputs/create-challenge.input';
 import { CreateChallengeResolver } from '@modules/challenge/infra/http/resolvers/create-challenge.resolver';
 import { CreateChallengeService } from '@modules/challenge/services/create-challenge.service';
@@ -8,7 +8,7 @@ describe('CreateChallengeResolver', () => {
   let sut: CreateChallengeResolver;
   let createChallengeService: MockProxy<CreateChallengeService>;
 
-  const mockResponse: ICreateChallengeResponseDTO = {
+  const mockResponse: ICreateChallengeServiceResponseDTO = {
     data: {
       id: '1',
       title: 'Test Challenge',

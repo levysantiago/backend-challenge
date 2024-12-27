@@ -1,4 +1,4 @@
-import { IListChallengesResponseDTO } from '@modules/challenge/dtos/ilist-challenges-response.dto';
+import { IListChallengesServiceResponseDTO } from '@modules/challenge/services/dtos/ilist-challenges-service-response.dto';
 import { ListChallengesInput } from '@modules/challenge/infra/http/inputs/list-challenges.input';
 import { ListChallengesResolver } from '@modules/challenge/infra/http/resolvers/list-challenges.resolver';
 import { ListChallengesService } from '@modules/challenge/services/list-challenges.service';
@@ -8,7 +8,7 @@ describe('ListChallengeResolver', () => {
   let sut: ListChallengesResolver;
   let listChallengeService: MockProxy<ListChallengesService>;
 
-  const mockResponse: IListChallengesResponseDTO = {
+  const mockResponse: IListChallengesServiceResponseDTO = {
     page: 1,
     limit: 10,
     orderBy: 'asc',

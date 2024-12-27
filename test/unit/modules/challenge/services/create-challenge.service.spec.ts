@@ -1,4 +1,4 @@
-import { ICreateChallengeDTO } from '@modules/challenge/dtos/icreate-challenge.dto';
+import { ICreateChallengeServiceDTO } from '@modules/challenge/services/dtos/icreate-challenge-service.dto';
 import { Challenge } from '@modules/challenge/infra/db/entities/challenge';
 import { CreateChallengeError } from '@modules/challenge/infra/errors/create-challenge.error';
 import { ChallengesRepository } from '@modules/challenge/repositories/challenges.repository';
@@ -21,7 +21,7 @@ describe('CreateChallengeService', () => {
 
   describe('execute', () => {
     // Arrange
-    const mockData: ICreateChallengeDTO = {
+    const mockData: ICreateChallengeServiceDTO = {
       title: 'Test Challenge',
       description: 'This is a test challenge',
     };
