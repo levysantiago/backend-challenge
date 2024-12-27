@@ -8,6 +8,7 @@ import { AnswerChallengeError } from '../infra/errors/answer-challenge.error';
 import { InvalidChallengeOfAnswerError } from '../infra/errors/invalid-challenge-of-answer.error';
 import { GitHubUrlHelper } from '@shared/resources/helpers/github-url.helper';
 import { AppError } from '@shared/resources/errors/app.error';
+import { InvalidRepositoryUrlError } from '../infra/errors/invalid-repository-url.error';
 
 type IErrorId = 'invalidChallenge' | 'invalidRepositoryUrl';
 
@@ -15,7 +16,7 @@ type IErrorId = 'invalidChallenge' | 'invalidRepositoryUrl';
 export class AnswerChallengeService {
   errors = {
     invalidChallenge: InvalidChallengeOfAnswerError,
-    invalidRepositoryUrl: InvalidChallengeOfAnswerError,
+    invalidRepositoryUrl: InvalidRepositoryUrlError,
   };
 
   constructor(
@@ -58,7 +59,7 @@ export class AnswerChallengeService {
       // Persist challenge
       await this.answersRepository.create(answer);
       // Add challenge title to answer
-      answer.challenge.title = challenge.title;
+      answer.challenge = { title: challenge.title };
       // Return challenge
       return { data: answer };
     } catch (err) {
