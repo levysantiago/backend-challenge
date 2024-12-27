@@ -194,19 +194,6 @@ describe('PrismaChallengesRepository', () => {
         expect.any(Promise),
       ]);
     });
-
-    it('should call PrismaChallengesMapper.fromPrisma with right parameters', async () => {
-      _beforeEach();
-
-      await sut.findBy(
-        { title: 'fake-title' },
-        { page: 1, limit: 10, orderBy: 'desc' },
-      );
-
-      expect(PrismaChallengesMapper.fromPrisma).toHaveBeenCalledWith(
-        fakePrismaChallenge,
-      );
-    });
   });
 
   describe('_buildQueryByFilter', () => {

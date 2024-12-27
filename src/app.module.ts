@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ChallengeModule } from './modules/challenge/challenge.module';
 import { ProvidersModule } from '@shared/providers/providers.module';
+import { AnswerModule } from '@modules/answer/answer.module';
+import { DateScalar } from '@shared/infra/scalar-types/date.scalar';
 
 @Module({
   imports: [
@@ -21,8 +23,16 @@ import { ProvidersModule } from '@shared/providers/providers.module';
         return graphQLFormattedError;
       },
     }),
+
+    // Scalar types
+    DateScalar,
+
+    // Providers
     ProvidersModule,
+
+    // Modules
     ChallengeModule,
+    AnswerModule,
   ],
   providers: [AppResolver, AppService],
 })

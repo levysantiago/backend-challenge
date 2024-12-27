@@ -2,7 +2,7 @@ import { ICreateChallengeDTO } from '@modules/challenge/dtos/icreate-challenge.d
 import { randomUUID } from 'node:crypto';
 
 /**
- * The representation of Challenge DB registry in the application.
+ * The Application representation of a Challenge.
  */
 export class Challenge {
   id: string;
