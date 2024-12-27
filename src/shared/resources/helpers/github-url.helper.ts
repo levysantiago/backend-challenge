@@ -1,7 +1,7 @@
 import { env } from '../env';
 
 export class GitHubUrlHelper {
-  static async isGithubUrl(url: string) {
+  static async isGithubUrl(url: string): Promise<boolean> {
     // Validate URL structure
     const isValidStructure = this._checkUrlStructure(url);
     if (isValidStructure) {
@@ -12,7 +12,7 @@ export class GitHubUrlHelper {
     return false;
   }
 
-  private static _checkUrlStructure(url: string) {
+  private static _checkUrlStructure(url: string): boolean {
     try {
       // Parsing URL
       const parsedUrl = new URL(url);
@@ -29,7 +29,7 @@ export class GitHubUrlHelper {
     }
   }
 
-  private static async _checkUrlCall(url: string) {
+  private static async _checkUrlCall(url: string): Promise<boolean> {
     // Fetch url
     const response = await this._fetchUrl(url);
     // Check response status
