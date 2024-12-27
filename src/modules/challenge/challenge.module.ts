@@ -30,5 +30,6 @@ import { DeleteChallengeService } from './services/delete-challenge.service';
     ListChallengesResolver,
     DeleteChallengeResolver,
   ],
+  exports: [ChallengesRepository],
 })
 export class ChallengeModule {}

@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AnswersRepository } from './repositories/answers.repository';
 import { PrismaAnswersRepository } from './infra/db/repositories/prisma-answers.repository';
+import { AnswerChallengeService } from './services/answer-challenge.service';
+import { ChallengeModule } from '@modules/challenge/challenge.module';
 
 @Module({
+  imports: [ChallengeModule],
   providers: [
     // Repositories
     {
@@ -11,6 +14,7 @@ import { PrismaAnswersRepository } from './infra/db/repositories/prisma-answers.
     },
 
     // Services
+    AnswerChallengeService,
 
     // Resolvers
   ],
