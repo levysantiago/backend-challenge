@@ -13,9 +13,14 @@ export class Answer {
   grade: number;
   createdAt: Date;
 
+  challenge?: {
+    title: string;
+  };
+
   constructor(props: ICreateAnswerEntityDTO, id?: string) {
     this.challengeId = props.challengeId;
     this.repositoryUrl = props.repositoryUrl;
+    this.challenge = props.challenge || undefined;
 
     this.id = id ?? randomUUID();
     this.status = props.status ?? 'PENDING';

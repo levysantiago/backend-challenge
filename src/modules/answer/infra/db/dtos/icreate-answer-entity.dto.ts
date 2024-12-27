@@ -6,4 +6,5 @@ export interface ICreateAnswerEntityDTO {
   status?: AnswerStatus;
   grade?: number;
   createdAt?: Date;
+  challenge?: { title: string };
 }
