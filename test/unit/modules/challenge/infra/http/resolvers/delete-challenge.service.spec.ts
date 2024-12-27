@@ -1,4 +1,4 @@
-import { IDeleteChallengeResponseDTO } from '@modules/challenge/dtos/idelete-challenge-response.dto';
+import { IDeleteChallengeServiceResponseDTO } from '@modules/challenge/services/dtos/idelete-challenge-service-response.dto';
 import { DeleteChallengeInput } from '@modules/challenge/infra/http/inputs/delete-challenge.input';
 import { DeleteChallengeResolver } from '@modules/challenge/infra/http/resolvers/delete-challenge.resolver';
 import { DeleteChallengeService } from '@modules/challenge/services/delete-challenge.service';
@@ -8,7 +8,7 @@ describe('DeleteChallengeResolver', () => {
   let sut: DeleteChallengeResolver;
   let deleteChallengeService: MockProxy<DeleteChallengeService>;
 
-  const mockResponse: IDeleteChallengeResponseDTO = {
+  const mockResponse: IDeleteChallengeServiceResponseDTO = {
     data: {
       id: '1',
       title: 'Test Challenge',

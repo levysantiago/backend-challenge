@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Challenge } from '../infra/db/entities/challenge';
 import { ChallengesRepository } from '../repositories/challenges.repository';
-import { ICreateChallengeDTO } from '../dtos/icreate-challenge.dto';
-import { ICreateChallengeResponseDTO } from '../dtos/icreate-challenge-response.dto';
 import { CreateChallengeError } from '../infra/errors/create-challenge.error';
+import { ICreateChallengeServiceDTO } from './dtos/icreate-challenge-service.dto';
+import { ICreateChallengeServiceResponseDTO } from './dtos/icreate-challenge-service-response.dto';
 
 @Injectable()
 export class CreateChallengeService {
   constructor(private challengesRepository: ChallengesRepository) {}
 
   async execute(
-    data: ICreateChallengeDTO,
-  ): Promise<ICreateChallengeResponseDTO> {
+    data: ICreateChallengeServiceDTO,
+  ): Promise<ICreateChallengeServiceResponseDTO> {
     try {
       // Create new challenge entity
       const challenge = new Challenge(data);

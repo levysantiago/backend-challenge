@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ChallengesRepository } from '../repositories/challenges.repository';
-import { IUpdateChallengeDTO } from '../dtos/iupdate-challenge.dto';
 import { ChallengeNotFoundError } from '../infra/errors/challenge-not-found.error';
 import { UpdateChallengeError } from '../infra/errors/update-challenge.error';
 import { AppError } from '@shared/resources/errors/app.error';
-import { IUpdateChallengeResponseDTO } from '../dtos/iupdate-challenge-response.dto';
+import { IUpdateChallengeServiceDTO } from './dtos/iupdate-challenge-service.dto';
+import { IUpdateChallengeServiceResponseDTO } from './dtos/iupdate-challenge-service-response.dto';
 
 @Injectable()
 export class UpdateChallengeService {
@@ -13,7 +13,7 @@ export class UpdateChallengeService {
   async execute({
     id,
     data,
-  }: IUpdateChallengeDTO): Promise<IUpdateChallengeResponseDTO> {
+  }: IUpdateChallengeServiceDTO): Promise<IUpdateChallengeServiceResponseDTO> {
     try {
       // Check if challenge exists in db
       const challenge = await this.challengesRepository.find(id);

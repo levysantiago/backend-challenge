@@ -1,4 +1,4 @@
-import { IUpdateChallengeResponseDTO } from '@modules/challenge/dtos/iupdate-challenge-response.dto';
+import { IUpdateChallengeServiceResponseDTO } from '@modules/challenge/services/dtos/iupdate-challenge-service-response.dto';
 import { UpdateChallengeInput } from '@modules/challenge/infra/http/inputs/update-challenge.input';
 import { UpdateChallengeResolver } from '@modules/challenge/infra/http/resolvers/update-challenge.resolver';
 import { UpdateChallengeService } from '@modules/challenge/services/update-challenge.service';
@@ -8,7 +8,7 @@ describe('UpdateChallengeResolver', () => {
   let sut: UpdateChallengeResolver;
   let updateChallengeService: MockProxy<UpdateChallengeService>;
 
-  const mockResponse: IUpdateChallengeResponseDTO = {
+  const mockResponse: IUpdateChallengeServiceResponseDTO = {
     data: {
       id: '1',
       title: 'Test Challenge',

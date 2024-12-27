@@ -1,4 +1,4 @@
-import { IUpdateChallengeDTO } from '@modules/challenge/dtos/iupdate-challenge.dto';
+import { IUpdateChallengeServiceDTO } from '@modules/challenge/services/dtos/iupdate-challenge-service.dto';
 import { Challenge } from '@modules/challenge/infra/db/entities/challenge';
 import { ChallengeNotFoundError } from '@modules/challenge/infra/errors/challenge-not-found.error';
 import { UpdateChallengeError } from '@modules/challenge/infra/errors/update-challenge.error';
@@ -30,7 +30,7 @@ describe('UpdateChallengeService', () => {
 
   describe('execute', () => {
     // Arrange
-    const mockData: IUpdateChallengeDTO = {
+    const mockData: IUpdateChallengeServiceDTO = {
       id: 'fake-id',
       data: {
         title: 'Test Challenge Updated',

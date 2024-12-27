@@ -1,4 +1,4 @@
-import { IListChallengesDTO } from '@modules/challenge/dtos/ilist-challenges.dto';
+import { IListChallengesServiceDTO } from '@modules/challenge/services/dtos/ilist-challenges-service.dto';
 import { ListChallengesError } from '@modules/challenge/infra/errors/list-challenges.error';
 import { ChallengesRepository } from '@modules/challenge/repositories/challenges.repository';
 import { ListChallengesService } from '@modules/challenge/services/list-challenges.service';
@@ -37,7 +37,7 @@ describe('ListChallengeService', () => {
 
   describe('execute', () => {
     // Arrange
-    const mockData: IListChallengesDTO = {
+    const mockData: IListChallengesServiceDTO = {
       page: 1,
       limit: 10,
       orderBy: 'asc',

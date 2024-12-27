@@ -1,4 +1,4 @@
-import { IDeleteChallengeDTO } from '@modules/challenge/dtos/idelete-challenge.dto';
+import { IDeleteChallengeServiceDTO } from '@modules/challenge/services/dtos/idelete-challenge-service.dto';
 import { Challenge } from '@modules/challenge/infra/db/entities/challenge';
 import { DeleteChallengeError } from '@modules/challenge/infra/errors/delete-challenge.error';
 import { ChallengesRepository } from '@modules/challenge/repositories/challenges.repository';
@@ -28,7 +28,7 @@ describe('DeleteChallengeService', () => {
 
   describe('execute', () => {
     // Arrange
-    const mockData: IDeleteChallengeDTO = {
+    const mockData: IDeleteChallengeServiceDTO = {
       id: 'fake_id',
     };
 

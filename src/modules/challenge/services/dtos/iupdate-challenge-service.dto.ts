@@ -1,4 +1,4 @@
-export interface IUpdateChallengeDTO {
+export interface IUpdateChallengeServiceDTO {
   id: string;
   data: {
     title?: string;

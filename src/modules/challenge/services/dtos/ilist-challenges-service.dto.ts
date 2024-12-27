@@ -1,4 +1,4 @@
-export interface IListChallengesDTO {
+export interface IListChallengesServiceDTO {
   orderBy?: 'asc' | 'desc';
   limit?: number;
   page?: number;
