@@ -73,16 +73,12 @@ export class PrismaAnswersRepository implements AnswersRepository {
 
     // Handle challengeId
     if (filter.challengeId) {
-      query['challengeId'] = {
-        challengeId: filter.challengeId,
-      };
+      query['challengeId'] = filter.challengeId;
     }
 
     // Handle status
     if (filter.status) {
-      query['status'] = {
-        status: filter.status,
-      };
+      query['status'] = filter.status;
     }
 
     // Handle dates
