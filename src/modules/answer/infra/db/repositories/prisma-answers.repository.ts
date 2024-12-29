@@ -34,6 +34,20 @@ export class PrismaAnswersRepository implements AnswersRepository {
     });
   }
 
+  async find(id: string): Promise<Answer | null> {
+    const rawAnswer = await this.prismaService.answer.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!rawAnswer) {
+      return null;
+    }
+
+    return PrismaAnswersMapper.fromPrisma(rawAnswer);
+  }
+
   async findBy(
     filter: IFindAnswersByFilter = {},
     options: ISearchOptions = {},
