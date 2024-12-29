@@ -13,7 +13,7 @@ describe('UpdateAnswerService', () => {
   const fakeAnswer: Answer = {
     id: 'fake_id',
     challengeId: 'fake_challenge_id',
-    status: 'PENDING',
+    status: 'Pending',
     grade: null,
     repositoryUrl: 'fake_repository_url',
     createdAt: new Date('2024-12-29T14:58:20.750Z'),
@@ -35,7 +35,7 @@ describe('UpdateAnswerService', () => {
     const mockData: IUpdateAnswerServiceDTO = {
       id: 'fake_id',
       data: {
-        status: 'DONE',
+        status: 'Done',
         grade: 10,
       },
     };

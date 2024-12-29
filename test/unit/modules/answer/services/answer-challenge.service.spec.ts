@@ -54,7 +54,7 @@ describe('AnswerChallengeService', () => {
           challengeId: fakeChallenge.id,
           repositoryUrl: mockData.repositoryUrl,
           grade: null,
-          status: 'PENDING',
+          status: 'Pending',
           createdAt: expect.any(Date),
           challenge: { title: fakeChallenge.title },
         },
@@ -80,7 +80,7 @@ describe('AnswerChallengeService', () => {
           challengeId: fakeChallenge.id,
           repositoryUrl: mockData.repositoryUrl,
           grade: null,
-          status: 'PENDING',
+          status: 'Pending',
           createdAt: expect.any(Date),
         }),
       );

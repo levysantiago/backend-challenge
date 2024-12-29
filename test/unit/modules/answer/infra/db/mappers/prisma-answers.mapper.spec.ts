@@ -10,7 +10,7 @@ describe('PrismaAnswersMapper', () => {
           challengeId: 'fake_challenge_id',
           grade: 10,
           repositoryUrl: 'fake_repository_url',
-          status: 'PENDING',
+          status: 'Pending',
           createdAt: new Date('2024-01-01T00:00:00Z'),
         },
         '123',
@@ -23,7 +23,7 @@ describe('PrismaAnswersMapper', () => {
         challengeId: 'fake_challenge_id',
         grade: 10,
         repositoryUrl: 'fake_repository_url',
-        status: 'PENDING',
+        status: 'Pending',
         createdAt: new Date('2024-01-01T00:00:00Z'),
       });
     });
@@ -36,7 +36,7 @@ describe('PrismaAnswersMapper', () => {
         challengeId: 'fake_challenge_id',
         grade: 10,
         repositoryUrl: 'fake_repository_url',
-        status: 'PENDING',
+        status: 'Pending',
         createdAt: new Date('2024-01-01T00:00:00Z'),
       };
 

@@ -28,7 +28,7 @@ model Answer {
   challengeId   String
   repositoryUrl String
   grade         Int?
-  status        Status   @default(PENDING)
+  status        Status   @default(Pending)
   createdAt     DateTime @default(now())
 
   challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
@@ -37,7 +37,7 @@ model Answer {
 }
 
 enum Status {
-  PENDING
-  ERROR
-  DONE
+  Pending
+  Error
+  Done
 }

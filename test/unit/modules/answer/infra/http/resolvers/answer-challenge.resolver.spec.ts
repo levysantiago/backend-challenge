@@ -13,7 +13,7 @@ describe('AnswerChallengeResolver', () => {
       id: '1',
       challengeId: 'fake_challenge_id',
       repositoryUrl: 'fake_repository_url',
-      status: 'PENDING',
+      status: 'Pending',
       challenge: {
         title: 'fake_title',
       },
