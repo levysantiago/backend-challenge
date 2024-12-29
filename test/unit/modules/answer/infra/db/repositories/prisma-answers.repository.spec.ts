@@ -15,7 +15,7 @@ describe('PrismaAnswersRepository', () => {
     challengeId: 'fake_challenge_id',
     grade: 10,
     repositoryUrl: 'fake_repository_url',
-    status: 'PENDING',
+    status: 'Pending',
     createdAt: new Date(),
   };
 
@@ -27,7 +27,7 @@ describe('PrismaAnswersRepository', () => {
       challengeId: 'fake_challenge_id',
       grade: 10,
       repositoryUrl: 'fake_repository_url',
-      status: 'PENDING' as AnswerStatus,
+      status: 'Pending' as AnswerStatus,
       createdAt: new Date(),
     },
     {
@@ -35,7 +35,7 @@ describe('PrismaAnswersRepository', () => {
       challengeId: 'fake_challenge_id',
       grade: 6,
       repositoryUrl: 'fake_repository_url',
-      status: 'PENDING' as AnswerStatus,
+      status: 'Pending' as AnswerStatus,
       createdAt: new Date(),
     },
   ];
@@ -143,7 +143,7 @@ describe('PrismaAnswersRepository', () => {
       challengeId: 'fake_challenge_id',
       startDate: new Date(),
       endDate: new Date(),
-      status: 'PENDING' as AnswerStatus,
+      status: 'Pending' as AnswerStatus,
     };
 
     const options = { page: 1, limit: 10, orderBy: 'desc' as any };
@@ -213,7 +213,7 @@ describe('PrismaAnswersRepository', () => {
       challengeId: 'fake_challenge_id',
       startDate: new Date(),
       endDate: new Date(),
-      status: 'PENDING' as AnswerStatus,
+      status: 'Pending' as AnswerStatus,
     };
 
     it('should build the query through the filter', () => {

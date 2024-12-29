@@ -17,7 +17,7 @@ describe('Answer Entity', () => {
     expect(challenge).toBeDefined();
     expect(challenge.challengeId).toBe(props.challengeId);
     expect(challenge.repositoryUrl).toBe(props.repositoryUrl);
-    expect(challenge.status).toBe('PENDING' as AnswerStatus);
+    expect(challenge.status).toBe('Pending' as AnswerStatus);
     expect(challenge.grade).toBeNull();
     expect(challenge.id).toBeDefined();
     expect(challenge.id).toHaveLength(36); // UUID length
@@ -31,7 +31,7 @@ describe('Answer Entity', () => {
     const props: ICreateAnswerEntityDTO = {
       challengeId: 'fake_challenge_id',
       repositoryUrl: 'fake_repository_url',
-      status: 'ERROR',
+      status: 'Error',
       grade: 10,
       createdAt,
     };
@@ -41,7 +41,7 @@ describe('Answer Entity', () => {
 
     // Assert
     expect(challenge.id).toBe(id);
-    expect(challenge.status).toBe('ERROR');
+    expect(challenge.status).toBe('Error');
     expect(challenge.grade).toBe(10);
     expect(challenge.createdAt).toBe(createdAt);
   });

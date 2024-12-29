@@ -52,7 +52,7 @@ export class AnswerChallengeService {
       // Check if there is an error
       if (errorId) {
         // Define the status as an error
-        answer.status = 'ERROR';
+        answer.status = 'Error';
         await this.answersRepository.create(answer);
         throw new this.errors[errorId]();
       }

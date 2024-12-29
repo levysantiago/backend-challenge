@@ -23,7 +23,7 @@ export class Answer {
     this.challenge = props.challenge || undefined;
 
     this.id = id ?? randomUUID();
-    this.status = props.status ?? 'PENDING';
+    this.status = props.status ?? 'Pending';
     this.grade = props.grade ?? null;
     this.createdAt = props.createdAt ?? new Date();
   }
