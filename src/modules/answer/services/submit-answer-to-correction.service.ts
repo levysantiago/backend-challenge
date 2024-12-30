@@ -19,7 +19,7 @@ export class SubmitAnswerToCorrectionService {
         handleAnswerCorrectionCallback,
       );
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 }

@@ -23,11 +23,25 @@ export class KafkaQueueService
       submissionId: string;
       repositoryUrl: string;
     },
-    callbackService: (result: ICorrectLessonResponse) => void,
+    callbackService: (result: ICorrectLessonResponse) => Promise<void>,
   ) {
     this.client
       .send('challenge.correction', JSON.stringify(message))
-      .subscribe(callbackService);
+      .subscribe({
+        next: async (result) => {
+          try {
+            await callbackService(result);
+          } catch (err) {
+            console.error('[KafkaQueueService] Error in callbackService:', err);
+          }
+        },
+        error: (err) => {
+          console.error(
+            '[KafkaQueueService] Error in microservice communication:',
+            err,
+          );
+        },
+      });
   }
 
   async onModuleDestroy() {
