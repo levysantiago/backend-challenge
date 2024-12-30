@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { QueueProvider } from './types/queue.provider';
-import { KafkaQueueService } from './implementations/kafka-queue.provider';
+import { KafkaQueueProvider } from './implementations/kafka-queue.provider';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Partitioners } from 'kafkajs';
 
@@ -27,7 +27,7 @@ import { Partitioners } from 'kafkajs';
       },
     ]),
   ],
-  providers: [{ provide: QueueProvider, useClass: KafkaQueueService }],
+  providers: [{ provide: QueueProvider, useClass: KafkaQueueProvider }],
   exports: [QueueProvider],
 })
 export class QueueModule {}

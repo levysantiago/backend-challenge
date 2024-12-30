@@ -9,13 +9,14 @@ import { QueueProvider } from '../types/queue.provider';
 import { ICorrectLessonResponse } from '../dtos/icorrect-lessons-response';
 
 @Injectable()
-export class KafkaQueueService
+export class KafkaQueueProvider
   implements QueueProvider, OnModuleInit, OnModuleDestroy
 {
   constructor(@Inject('QUEUE_SERVICE_CLIENT') private client: ClientKafka) {}
 
   async onModuleInit() {
     this.client.subscribeToResponseOf('challenge.correction');
+    await this.client.connect();
   }
 
   emitChallengeCorrection(
