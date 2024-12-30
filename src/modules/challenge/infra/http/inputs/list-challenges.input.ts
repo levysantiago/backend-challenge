@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 
 @InputType({ description: 'The input for list challenges operation.' })
 export class ListChallengesInput {
-  @Field(() => ChallengeFilterInput)
+  @Field(() => ChallengeFilterInput, { nullable: true })
   @ValidateNested()
   @Type(() => ChallengeFilterInput)
   filter?: ChallengeFilterInput;
