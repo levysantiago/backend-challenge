@@ -6,7 +6,11 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Validation pipe
   app.useGlobalPipes(new ValidationPipe());
+
+  // Enable shutdown hooks
+  app.enableShutdownHooks();
 
   // Apply the filter globally
   app.useGlobalFilters(new GraphQLHttpExceptionFilter());

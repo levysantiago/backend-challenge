@@ -4,6 +4,8 @@ import { PrismaAnswersRepository } from './infra/db/repositories/prisma-answers.
 import { AnswerChallengeService } from './services/answer-challenge.service';
 import { ChallengeModule } from '@modules/challenge/challenge.module';
 import { AnswerChallengeResolver } from './infra/http/resolvers/answer-challenge.resolver';
+import { SubmitAnswerToCorrectionService } from './services/submit-answer-to-correction.service';
+import { UpdateAnswerService } from './services/update-answer.service';
 
 @Module({
   imports: [ChallengeModule],
@@ -16,6 +18,8 @@ import { AnswerChallengeResolver } from './infra/http/resolvers/answer-challenge
 
     // Services
     AnswerChallengeService,
+    UpdateAnswerService,
+    SubmitAnswerToCorrectionService,
 
     // Resolvers
     AnswerChallengeResolver,
