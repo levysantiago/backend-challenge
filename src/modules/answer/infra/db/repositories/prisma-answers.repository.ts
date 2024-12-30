@@ -66,6 +66,9 @@ export class PrismaAnswersRepository implements AnswersRepository {
       }),
       this.prismaService.answer.findMany({
         where: query,
+        include: {
+          challenge: { select: { title: true } },
+        },
         orderBy: { createdAt: options.orderBy ?? 'asc' },
         take: _take,
         skip: (_page - 1) * _take,

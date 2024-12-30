@@ -6,6 +6,7 @@ import { ChallengeModule } from '@modules/challenge/challenge.module';
 import { AnswerChallengeResolver } from './infra/http/resolvers/answer-challenge.resolver';
 import { SubmitAnswerToCorrectionService } from './services/submit-answer-to-correction.service';
 import { UpdateAnswerService } from './services/update-answer.service';
+import { ListAnswersService } from './services/list-answers.service';
 
 @Module({
   imports: [ChallengeModule],
@@ -20,6 +21,7 @@ import { UpdateAnswerService } from './services/update-answer.service';
     AnswerChallengeService,
     UpdateAnswerService,
     SubmitAnswerToCorrectionService,
+    ListAnswersService,
 
     // Resolvers
     AnswerChallengeResolver,

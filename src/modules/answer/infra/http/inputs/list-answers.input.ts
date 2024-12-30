@@ -1,14 +1,14 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsIn, Max, Min, ValidateNested } from 'class-validator';
-import { ChallengeFilterInput } from './challenge-filter.input';
+import { AnswerFilterInput } from './answer-filter.input';
 import { Type } from 'class-transformer';
 
-@InputType({ description: 'The input for list challenges operation.' })
-export class ListChallengesInput {
-  @Field(() => ChallengeFilterInput)
+@InputType({ description: 'The input for list answers operation.' })
+export class ListAnswersInput {
+  @Field(() => AnswerFilterInput)
   @ValidateNested()
-  @Type(() => ChallengeFilterInput)
-  filter?: ChallengeFilterInput;
+  @Type(() => AnswerFilterInput)
+  filter?: AnswerFilterInput;
 
   @Field(() => Int, { nullable: true })
   @Min(1)
