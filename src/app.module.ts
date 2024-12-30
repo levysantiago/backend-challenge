@@ -9,6 +9,7 @@ import { HeartbeatModule } from '@modules/heartbeat/heartbeat.module';
 
 @Module({
   imports: [
+    // Configure GraphQL
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',

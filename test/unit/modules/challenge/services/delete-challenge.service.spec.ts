@@ -4,6 +4,7 @@ import { DeleteChallengeError } from '@modules/challenge/infra/errors/delete-cha
 import { ChallengesRepository } from '@modules/challenge/repositories/challenges.repository';
 import { DeleteChallengeService } from '@modules/challenge/services/delete-challenge.service';
 import { mock, MockProxy } from 'jest-mock-extended';
+import { ChallengeNotFoundError } from '@modules/challenge/infra/errors/challenge-not-found.error';
 
 describe('DeleteChallengeService', () => {
   let sut: DeleteChallengeService;
@@ -46,7 +47,15 @@ describe('DeleteChallengeService', () => {
       expect(challengesRepository.delete).toHaveBeenCalledWith('fake_id');
     });
 
-    it('should throw CreateChallengeError if repository throws', async () => {
+    it('should rethrow ChallengeNotFoundError if challenge not found', async () => {
+      jest.spyOn(challengesRepository, 'delete').mockResolvedValueOnce(null);
+      // Act
+      const promise = sut.execute(mockData);
+      // Assert
+      expect(promise).rejects.toThrow(new ChallengeNotFoundError());
+    });
+
+    it('should throw DeleteChallengeError if repository throws', async () => {
       jest
         .spyOn(challengesRepository, 'delete')
         .mockRejectedValueOnce(new Error());
