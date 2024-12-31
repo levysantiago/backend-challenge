@@ -173,7 +173,47 @@ So here are some examples of services from each domain:
 - Also I used `fetch` instead of `axios` (that can be clearer in some cases) because this is the only part that the project calls another API and doesn't need to handle response data. As `fetch` is lighter than `axios`, I preferred to use the `fetch` in this case.
 
 ### Business Requirements
+
+**Answer default attributes**
+
+- All the `Answer` default attributes are handled by the entity itself, for example, the `id`, `status`, `grade` and `createdAt` when creating a new `Answer` are set to respectively a random UUID, `status` "Pending", `grade` as `null` and `createdAt` as the current Date. I chose the `grade` to be `null` at beginning because at the `Answer` creation there is no `grade` value yet, so it's better to define `grade` as `null` and later calculate the grade at corrections service and update the `Answer`.
+
+**Repository URL verification**
+
+- The repository URL verification is done by calling the `GitHubUrlHelper` cited in the last section.
+
+**Submitting Answer Correction**
+
+- To be able to notify the corrections service, a shared interface `MessagingProvider` was created using the `KafkaMessagingProvider` as implementation, this provider is used by the `SubmitAnswerToCorrectionService` to emit the answer to the correction service, and the `SubmitAnswerToCorrectionService` is used inside the `AnswerChallengeResolver` that calls this service right after calling the `AnswerChallengeService` which creates a new `Answer`.
+
 ### Non-Functional Requirements
+
+**Listing Answers and Challenges**
+
+- To list both the `Answer` and `Challenge` registries, I used the Prisma query. The full JSON response object returned by these listing routes is similar to:
+
+```json
+{
+  "page": 1,
+  "limit": 10,
+  "orderBy": "asc",
+  "total": 20,
+  "data": [
+    //...
+  ]
+}
+```
+
+All filters could be done only with the Prisma query object, but besides that I also needed to calculate the `total`, and by default, it is not possible yet to include the `total` in Prisma `.findMany` query only by calling `.count` as another call. There are three ways to do that:
+1. Making two different DB requests, first finding the registries (with pagination and filter) and then another call to count all the registries.
+2. Making two different DB requests but sending via `$transaction`, in this case the two requests are sent to Prisma, then the Prisma executes the two requests and returns the both result.
+3. Create a raw query to include the total inside the SQL result.
+
+The fastest option is creating a raw query, for sure, but then we give up from clean code and might also compromise future maintainability. The second fast way is by using the `$transaction` because we keep using the Prisma friendly query and send it as a DB transaction, so I chose this option.
+
+**Custom Scalar Types**
+
+I also used Custom Scalar Type to automatically transform the Date field between the API and Client GraphQL requests. When the client sends the Date as ISO String the GraphQL checks all the Date fields and transform to `Date` type, on the other hand, when the API sends data to the Client, the GraphQL identify all Date fields and transform them to ISO String.
 
 # Getting started 
 
