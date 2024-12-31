@@ -10,6 +10,7 @@ This project is the implementation of a [Rocketseat backend challenge](https://g
   - [Technologies used](#technologies-used)
 - [About the Project development](#about-the-project-development)
   - [Design](#design)
+  - [Infrastructure](#infrastructure)
   - [Folders structure](#folders-structure)
   - [Layers](#layers)
   - [Requirements](#requirements)
@@ -70,6 +71,47 @@ erDiagram
 </details>
 
 `Node:` Of course that in a real scenario there might be many more entities here that can also be related to these two entities cited above. In wider scenario there might be entities like `Student` that can submit `Answers`, `Admin` which should be able to create new `Challenges`, and so on.
+
+## Infrastructure
+
+To have an abstract overview of the project infrastructure, see the diagram below:
+
+```mermaid
+flowchart LR
+    subgraph Client Infra
+        Client["Client APP"]
+    end
+    
+    subgraph Challenges API Infra
+        ChallengesAPI["Challenges API"]
+        PrismaORM["Prisma ORM"]
+        PostgreSQLDB["PostgreSQL DB"]
+    end
+
+    subgraph Corrections Infra
+        CorrectionsMicroservice["Corrections Microservice"]
+    end
+
+    subgraph Kafka Cluster
+        subgraph Broker 1
+            KafkaProd["challenge.correction"]
+            KafkaReply["challenge.correction.reply"]
+        end
+    end
+
+    subgraph GitHub Infra
+        GitHubAPI["GitHub API"]
+    end
+
+    Client <-->|GraphQL Requests| ChallengesAPI
+    ChallengesAPI -->|Produces Answers| KafkaProd
+    KafkaProd -->|Processes| CorrectionsMicroservice
+    KafkaReply -->|Processes| ChallengesAPI
+    CorrectionsMicroservice -->|Produces Result| KafkaReply
+    ChallengesAPI <-->|Prisma Queries| PrismaORM
+    PrismaORM <-->|SQL Query| PostgreSQLDB
+    ChallengesAPI <-->|Request check Repo.| GitHubAPI
+```
 
 ## Folders structure
 
