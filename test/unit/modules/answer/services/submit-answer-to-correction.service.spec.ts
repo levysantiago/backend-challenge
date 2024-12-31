@@ -1,21 +1,21 @@
 import { AnswerStatus } from '@modules/answer/infra/types/answer-status';
 import { SubmitAnswerToCorrectionService } from '@modules/answer/services/submit-answer-to-correction.service';
-import { QueueProvider } from '@shared/providers/queue-provider/types/queue.provider';
+import { MessagingProvider } from '@shared/providers/messaging-provider/types/messaging.provider';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('SubmitAnswerToCorrectionService', () => {
   let sut: SubmitAnswerToCorrectionService;
-  let queueProvider: MockProxy<QueueProvider>;
+  let messagingProvider: MockProxy<MessagingProvider>;
 
   beforeAll(() => {
-    queueProvider = mock();
+    messagingProvider = mock();
 
     // Mock ChallengesRepository
-    queueProvider.emitChallengeCorrection.mockReturnValue();
+    messagingProvider.emitChallengeCorrection.mockReturnValue();
   });
 
   beforeEach(() => {
-    sut = new SubmitAnswerToCorrectionService(queueProvider);
+    sut = new SubmitAnswerToCorrectionService(messagingProvider);
   });
 
   describe('execute', () => {
@@ -40,11 +40,11 @@ describe('SubmitAnswerToCorrectionService', () => {
       expect(sut.execute(mockData)).toBeUndefined();
     });
 
-    it('should be able call queueProvider.emitChallengeCorrection with right parameters', async () => {
+    it('should be able call messagingProvider.emitChallengeCorrection with right parameters', async () => {
       // Act
       sut.execute(mockData);
       // Assert
-      expect(queueProvider.emitChallengeCorrection).toHaveBeenCalledWith(
+      expect(messagingProvider.emitChallengeCorrection).toHaveBeenCalledWith(
         {
           submissionId: mockData.answer.id,
           repositoryUrl: mockData.answer.repositoryUrl,

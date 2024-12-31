@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
-import { QueueProvider } from './types/queue.provider';
-import { KafkaQueueProvider } from './implementations/kafka-queue.provider';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Partitioners } from 'kafkajs';
+import { MessagingProvider } from './types/messaging.provider';
+import { KafkaMessagingProvider } from './implementations/kafka-messaging.provider';
 
 @Global()
 @Module({
@@ -10,7 +10,7 @@ import { Partitioners } from 'kafkajs';
     // Configure Kafka
     ClientsModule.register([
       {
-        name: 'QUEUE_SERVICE_CLIENT',
+        name: 'MESSAGING_SERVICE_CLIENT',
         transport: Transport.KAFKA,
         options: {
           client: {
@@ -27,7 +27,7 @@ import { Partitioners } from 'kafkajs';
       },
     ]),
   ],
-  providers: [{ provide: QueueProvider, useClass: KafkaQueueProvider }],
-  exports: [QueueProvider],
+  providers: [{ provide: MessagingProvider, useClass: KafkaMessagingProvider }],
+  exports: [MessagingProvider],
 })
-export class QueueModule {}
+export class MessagingModule {}

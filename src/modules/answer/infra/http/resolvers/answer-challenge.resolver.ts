@@ -5,7 +5,7 @@ import { AnswerModel } from '../models/answer.model';
 import { AnswerChallengeInput } from '../inputs/answer-challenge.input';
 import { SubmitAnswerToCorrectionService } from '@modules/answer/services/submit-answer-to-correction.service';
 import { UpdateAnswerService } from '@modules/answer/services/update-answer.service';
-import { ICorrectLessonResponse } from '@shared/providers/queue-provider/dtos/icorrect-lessons-response';
+import { ICorrectLessonResponse } from '@shared/providers/messaging-provider/dtos/icorrect-lessons-response';
 
 @Resolver(() => AnswerModel)
 export class AnswerChallengeResolver {

@@ -1,10 +1,10 @@
 import { ClientKafka } from '@nestjs/microservices';
-import { ICorrectLessonResponse } from '@shared/providers/queue-provider/dtos/icorrect-lessons-response';
-import { KafkaQueueProvider } from '@shared/providers/queue-provider/implementations/kafka-queue.provider';
+import { ICorrectLessonResponse } from '@shared/providers/messaging-provider/dtos/icorrect-lessons-response';
+import { KafkaMessagingProvider } from '@shared/providers/messaging-provider/implementations/kafka-messaging.provider';
 import { mock, MockProxy } from 'jest-mock-extended';
 
-describe('KafkaQueueService', () => {
-  let sut: KafkaQueueProvider;
+describe('KafkaMessagingProvider', () => {
+  let sut: KafkaMessagingProvider;
   let clientKafka: MockProxy<ClientKafka>;
 
   const mockResponse: ICorrectLessonResponse = {
@@ -28,7 +28,7 @@ describe('KafkaQueueService', () => {
   });
 
   beforeEach(async () => {
-    sut = new KafkaQueueProvider(clientKafka);
+    sut = new KafkaMessagingProvider(clientKafka);
   });
 
   it('should be defined', () => {
@@ -104,7 +104,7 @@ describe('KafkaQueueService', () => {
 
       // Assert
       expect(consoleSpy).toHaveBeenCalledWith(
-        '[KafkaQueueService] Error in microservice communication:',
+        '[KafkaMessagingProvider] Error in microservice communication:',
         expect.any(Error),
       );
 
