@@ -5,14 +5,16 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { QueueProvider } from '../types/queue.provider';
+import { MessagingProvider } from '../types/messaging.provider';
 import { ICorrectLessonResponse } from '../dtos/icorrect-lessons-response';
 
 @Injectable()
-export class KafkaQueueProvider
-  implements QueueProvider, OnModuleInit, OnModuleDestroy
+export class KafkaMessagingProvider
+  implements MessagingProvider, OnModuleInit, OnModuleDestroy
 {
-  constructor(@Inject('QUEUE_SERVICE_CLIENT') private client: ClientKafka) {}
+  constructor(
+    @Inject('MESSAGING_SERVICE_CLIENT') private client: ClientKafka,
+  ) {}
 
   async onModuleInit() {
     this.client.subscribeToResponseOf('challenge.correction');
@@ -33,12 +35,15 @@ export class KafkaQueueProvider
           try {
             await callbackService(result);
           } catch (err) {
-            console.error('[KafkaQueueService] Error in callbackService:', err);
+            console.error(
+              '[KafkaMessagingProvider] Error in callbackService:',
+              err,
+            );
           }
         },
         error: (err) => {
           console.error(
-            '[KafkaQueueService] Error in microservice communication:',
+            '[KafkaMessagingProvider] Error in microservice communication:',
             err,
           );
         },

@@ -1,5 +1,5 @@
 import { Answer } from '@modules/answer/infra/db/entities/answer';
-import { ICorrectLessonResponse } from '@shared/providers/queue-provider/dtos/icorrect-lessons-response';
+import { ICorrectLessonResponse } from '@shared/providers/messaging-provider/dtos/icorrect-lessons-response';
 
 export interface ISubmitAnswerToCorrectionServiceDTO {
   answer: Answer;

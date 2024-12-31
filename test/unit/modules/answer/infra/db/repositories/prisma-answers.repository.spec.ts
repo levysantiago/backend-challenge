@@ -180,6 +180,9 @@ describe('PrismaAnswersRepository', () => {
           status: filter.status,
           createdAt: { lte: filter.endDate, gte: filter.startDate },
         },
+        include: {
+          challenge: { select: { title: true } },
+        },
         orderBy: { createdAt: options.orderBy },
         take: options.limit,
         skip: (options.page - 1) * options.limit,
