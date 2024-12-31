@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { QueueProvider } from '@shared/providers/queue-provider/types/queue.provider';
 import { ISubmitAnswerToCorrectionServiceDTO } from './dtos/isubmit-answer-to-correction-service.dto';
+import { MessagingProvider } from '@shared/providers/messaging-provider/types/messaging.provider';
 
 @Injectable()
 export class SubmitAnswerToCorrectionService {
-  constructor(private readonly queueProvider: QueueProvider) {}
+  constructor(private readonly messagingProvider: MessagingProvider) {}
 
   execute({
     answer,
     handleAnswerCorrectionCallback,
   }: ISubmitAnswerToCorrectionServiceDTO): void {
     try {
-      this.queueProvider.emitChallengeCorrection(
+      this.messagingProvider.emitChallengeCorrection(
         {
           submissionId: answer.id,
           repositoryUrl: answer.repositoryUrl,

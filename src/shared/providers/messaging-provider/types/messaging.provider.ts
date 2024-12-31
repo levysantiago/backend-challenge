@@ -1,6 +1,6 @@
 import { ICorrectLessonResponse } from '../dtos/icorrect-lessons-response';
 
-export abstract class QueueProvider {
+export abstract class MessagingProvider {
   abstract emitChallengeCorrection(
     message: {
       submissionId: string;
