@@ -2,6 +2,33 @@
 
 This project is the implementation of a [Rocketseat backend challenge](https://github.com/Rocketseat/backend-challenge) a service that manages the challenges answers sent by the Rocketseat students.
 
+
+## Index
+
+- [Challenges API](#challenges-api)
+  - [Index](#index)
+  - [Technologies used](#technologies-used)
+- [About the Project development](#about-the-project-development)
+  - [Design](#design)
+  - [Folders structure](#folders-structure)
+  - [Layers](#layers)
+  - [Requirements](#requirements)
+    - [Functional Requirements](#functional-requirements)
+    - [Important Decisions/Choices](#important-decisionschoices)
+    - [Business Requirements](#business-requirements)
+    - [Non-Functional Requirements](#non-functional-requirements)
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+    - [Challenges API dependencies](#challenges-api-dependencies)
+    - [Corrections service dependencies](#corrections-service-dependencies)
+  - [Configuring the PostgreSQL and Kafka](#configuring-the-postgresql-and-kafka)
+  - [Running migrations](#running-migrations)
+  - [Configuring environmental variables](#configuring-environmental-variables)
+  - [Running the API](#running-the-api)
+    - [Running Corrections Service](#running-corrections-service)
+    - [Running Challenges API](#running-challenges-api)
+  - [Test](#test)
+
 ## Technologies used
 
 - [NestJS](https://nestjs.com/): The framework used to develop the API.
@@ -71,6 +98,19 @@ domain/
 
 This structure contributes for the project scalability and maintainability where each domain service can be developed in an isolated way without interfering to another domain service. Besides that it helps decrease the project complexity and ensure that each team can be focused in your own context.
 
+## Layers
+
+This project architecture was developed in layers. Considering from atomicity (low-level building blocks) to client communication (high-level interfaces) the project layers are:
+
+| **Layer**                | **Key Components**                          | **Description**                                                                      |
+| ------------------------ | ------------------------------------------- | ------------------------------------------------------------------------------------ |
+| **Atomicity**            | Entities                                    | The most granular and fundamental part of the domain model.                          |
+| **Data Translation**     | Mappers                                     | Convert between entities and persistence layers.                                     |
+| **Persistence**          | Repositories                                | Abstract the database interaction.                                                   |
+| **Business Logic**       | Services                                    | Encapsulate use cases and orchestrate domain logic.                                  |
+| **Infrastructure**       | Kafka Messaging Provider, GitHub URL Helper | Handle cross-cutting concerns or external integrations.                              |
+| **Client Communication** | Resolvers                                   | Interact with clients, exposing functionality via APIs (in this case, with GraphQL). |
+
 ## Requirements
 
 This section explains how the requirements for the project where addressed.
@@ -98,6 +138,42 @@ This section explains how the requirements for the project where addressed.
   - Should use GraphQL as request query language.
   - It would be good to use NestJS to build the API.
   - It would be good to use Custom Scalar Types.
+
+### Functional Requirements
+
+In order to address the functional requirements the API was developed by creating one specific `repository`, `service` and `resolver` to each CRUD operation needed and also organizing it to the corresponding domain which this operation is related to. This also relates to the Single Responsibility Principle from SOLID. 
+
+So here are some examples of services from each domain:
+
+
+- `Challenge`
+  - `CreateChallengeService` - Creates a new Challenge and persist in database by calling the database provider.
+  - `DeleteChallengeService` - Deletes a registered Challenge by calling the database provider. 
+  - `UpdateChallengeService` - Updates an already registered Challenge by calling the database provider.
+  - `ListChallengeService` - Lists the Challenges registered in the DB, also allows to filter by `title`, and `description`.
+- `Answer`
+  - `AnswerChallengeService` - Creates a new answer and register it in database by calling the database provider.
+  - `ListAnswersService` - Lists the answers registered in the DB, also allows to filter by `challengeId`, date interval and `status`.
+  - `SubmitAnswerToCorrectionService` - Submits an already registered answer to the correction microservice.
+  - `UpdateAnswerService` - Updates the `grade` and `status` of an answer. This service is called as a callback after the corrections microservice returns a correction result.
+
+### Important Decisions/Choices
+
+**CASCADE on delete Challenge**
+- In Prisma Schema the `CASCADE` option was turned on, so when deleting a Challenge, all Answers related to it will be deleted too. Depending on the project specific needs, might be interesting to keep the Challenge registered in database and just set a new attribute to inform that this registry is deleted/archived. This second option can be used if we want to keep the answers saved and use them as a history of answers even if the Challenge "doesn't exist" anymore.
+
+**UpdateAnswerService as a callback**
+- The `UpdateAnswerService` is sent as a callback for the `SubmitAnswerToCorrectionService` by the `AnswerChallengeResolver`, so that the `SubmitAnswerToCorrectionService` doesn't need to know much about what is the service that will update the answer after receiving the correction response, it just receive a callback and execute it. It was built this way to decouple the dependency of the two services and maintain the consistency.
+
+**Answers list returning also challenge titles**
+- The Answers returned in `ListAnswersService` also returns the challenge title for each answer, this was done by creating a Prisma query in the `PrismaAnswersRepository` that joins the two tables and already returns also the challenge title for the answers listing. I added this feature so that the client can print also from which challenge this answer is from without needing to make another request.
+
+**GitHub URL validation Rate Limiting**
+- It was created a [GitHubUrlHelper](./src/shared/resources/helpers/github-url.helper.ts) to handle the Answer repository URL validation. This helper validates the URL structure and also consults the GitHub website to verify if this repository really exists. The rate limiting for consulting the public repository URL is `60 tries`, and the rate limiting for consulting a public repository through the GitHub API using a access token as Bearer token is `5000 tries`. For this project I decided to use both of them, first try to consult the repository by requesting the public website, if it fails, verify the repository through the GitHub API as a fallback. 
+- Also I used `fetch` instead of `axios` (that can be clearer in some cases) because this is the only part that the project calls another API and doesn't need to handle response data. As `fetch` is lighter than `axios`, I preferred to use the `fetch` in this case.
+
+### Business Requirements
+### Non-Functional Requirements
 
 # Getting started 
 
@@ -136,6 +212,35 @@ docker compose up -d
 ```
 
 Make sure that all three services are up and running before jumping to the next section.
+
+## Running migrations
+
+Now you have the database running, you can execute the migrations to create the database in PostgreSQL:
+
+```bash
+npx prisma migrate dev
+```
+
+you can also run the command below to avoid executing the seed script and creating predefined registries in your DB:
+
+```bash
+npx prisma migrate dev --skip-seed
+```
+
+## Configuring environmental variables
+
+Now you will need to create a `.env` (use `.env.example` as reference) file inside the project root folder and insert the following keys:
+
+```env
+# DATABASE
+DATABASE_URL=
+
+# GITHUB
+GITHUB_ACCESS_TOKEN=
+```
+
+- `DATABASE_URL`: is the PostgreSQL database url for the API to be able to access the database, e.g. `postgresql://<username>:<password>@localhost:5432/<database>?schema=public`
+- `GITHUB_ACCESS_TOKEN`: is the [GitHub access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) used to call the GitHub API to validate the repository URL. Create your access token (`Tokens (classic)`), give `public_repo` permission and paste it in this variable.
 
 ## Running the API
 
