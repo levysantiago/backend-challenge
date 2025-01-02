@@ -4,14 +4,10 @@ import { MaxLength } from 'class-validator';
 @InputType()
 export class CreateChallengeInput {
   @Field(() => String)
-  @MaxLength(30, {
-    message: 'title must be shorter than or equal to 30 characters',
-  })
+  @MaxLength(30)
   title: string;
 
   @Field(() => String)
-  @MaxLength(255, {
-    message: 'description must be shorter than or equal to 255 characters',
-  })
+  @MaxLength(255)
   description: string;
 }

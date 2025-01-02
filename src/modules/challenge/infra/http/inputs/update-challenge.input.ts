@@ -3,15 +3,15 @@ import { IsOptional, MaxLength } from 'class-validator';
 
 @InputType()
 export class UpdateChallengeInput {
-  @Field()
+  @Field(() => String)
   id: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @MaxLength(30)
   @IsOptional()
   title?: string;
 
-  @Field({ nullable: true })
+  @Field(() => String, { nullable: true })
   @IsOptional()
   @MaxLength(255)
   description?: string;

@@ -20,7 +20,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage --silent",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./jest-e2e.config.js --runInBand",
+    "test:e2e": "jest --config ./jest-e2e.config.js --runInBand --silent",
     "postinstall": "husky init && echo \"npx --no -- commitlint --edit\" > .husky/commit-msg",
     "prepare": "husky"
   },
