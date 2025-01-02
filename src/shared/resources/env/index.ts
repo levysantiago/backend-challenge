@@ -6,7 +6,7 @@ let envFile = '.env';
 if (process.env.NODE_ENV === 'test') {
   envFile = '.env.test';
 }
-config({ path: resolve(__dirname, `../../../../${envFile}`) });
+config({ path: resolve(__dirname, `../../../../${envFile}`), override: true });
 
 const createEnvSchema = z.object({
   DATABASE_URL: z.string(),

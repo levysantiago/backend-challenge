@@ -3,7 +3,6 @@ import { execSync } from 'child_process';
 import { randomUUID } from 'node:crypto';
 
 const prisma = new PrismaClient();
-
 /**
  * Function to generate database URL by editing the schema name.
  */
@@ -21,6 +20,8 @@ const schema = randomUUID();
 
 beforeAll(() => {
   const databaseURL = generateDatabaseURL(schema);
+
+  process.env.DATABASE_URL = databaseURL;
 
   // console.log('Setting up the test database...');
   execSync(
