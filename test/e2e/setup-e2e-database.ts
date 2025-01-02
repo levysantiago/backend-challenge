@@ -4,6 +4,9 @@ import { randomUUID } from 'node:crypto';
 
 const prisma = new PrismaClient();
 
+/**
+ * Function to generate database URL by editing the schema name.
+ */
 function generateDatabaseURL(schema: string) {
   if (!process.env.DATABASE_URL) {
     throw new Error('Please provide a DATABASE_URL environment variable.');
@@ -13,6 +16,7 @@ function generateDatabaseURL(schema: string) {
   return url.toString();
 }
 
+// Generate database schema name
 const schema = randomUUID();
 
 beforeAll(() => {

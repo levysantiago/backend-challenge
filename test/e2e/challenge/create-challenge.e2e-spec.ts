@@ -1,37 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest-graphql';
-import { AppModule } from '../../../src/app.module';
 import { ExecutionResult } from 'graphql';
 import { ObjMap } from 'graphql/jsutils/ObjMap';
-import { GraphQLHttpExceptionFilter } from '@shared/infra/filters/exception.filter';
+import { mockedApp } from '../mocked-app-helper';
 
 describe('Create Challenge (e2e)', () => {
-  let app: INestApplication;
-
-  beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-
-    // Apply the ValidationPipe
-    app.useGlobalPipes(new ValidationPipe());
-
-    // Apply the global exception filter
-    app.useGlobalFilters(new GraphQLHttpExceptionFilter());
-
-    // Enable shutdown hooks
-    app.enableShutdownHooks();
-
-    await app.init();
-  }, 10000);
-
-  afterAll(async () => {
-    await app.close();
-  }, 10000);
-
   it('should create a new challenge and return the challenge data', async () => {
     // Mutation
     const createChallengeMutation = `
@@ -57,7 +29,7 @@ describe('Create Challenge (e2e)', () => {
 
     // Execute route
     const response: ExecutionResult<any, ObjMap<any>> = await request(
-      app.getHttpServer(),
+      mockedApp.getHttpServer(),
     )
       .mutate(createChallengeMutation)
       .variables(variables)
@@ -100,7 +72,7 @@ describe('Create Challenge (e2e)', () => {
     };
 
     // Execute route
-    const response = await request(app.getHttpServer())
+    const response = await request(mockedApp.getHttpServer())
       .mutate(createChallengeMutation)
       .variables(variables);
 
@@ -143,7 +115,7 @@ describe('Create Challenge (e2e)', () => {
     };
 
     // Execute route
-    const response = await request(app.getHttpServer())
+    const response = await request(mockedApp.getHttpServer())
       .mutate(createChallengeMutation)
       .variables(variables);
 

@@ -14,5 +14,8 @@ module.exports = {
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
-  setupFilesAfterEnv: ['./test/e2e/setup.ts'],
+  setupFilesAfterEnv: [
+    './test/e2e/setup-e2e-database.ts',
+    './test/e2e/setup-e2e-app.ts',
+  ],
 };
