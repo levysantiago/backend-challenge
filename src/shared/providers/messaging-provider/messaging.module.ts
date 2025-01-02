@@ -3,6 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Partitioners } from 'kafkajs';
 import { MessagingProvider } from './types/messaging.provider';
 import { KafkaMessagingProvider } from './implementations/kafka-messaging.provider';
+import { env } from '@shared/resources/env';
 
 @Global()
 @Module({
@@ -15,7 +16,7 @@ import { KafkaMessagingProvider } from './implementations/kafka-messaging.provid
         options: {
           client: {
             clientId: 'challenge_api',
-            brokers: ['localhost:9092'],
+            brokers: [env.KAFKA_BROKER_URL],
           },
           consumer: {
             groupId: 'challenge-consumer',

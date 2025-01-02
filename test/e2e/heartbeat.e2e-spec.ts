@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 
-describe('AppResolver (e2e)', () => {
+describe('Heartbeat (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -13,16 +13,16 @@ describe('AppResolver (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
+  }, 10000);
 
   afterAll(async () => {
     await app.close();
-  });
+  }, 10000);
 
-  it('should return "Hello, World!" for getHello query', () => {
+  it('should return "Challenges API running! 🚀" for heartbeat query', () => {
     const query = `
       query {
-        getHello
+        heartbeat
       }
     `;
 
@@ -31,7 +31,7 @@ describe('AppResolver (e2e)', () => {
       .send({ query })
       .expect(200)
       .expect((res) => {
-        expect(res.body.data.getHello).toBe('Hello World!');
+        expect(res.body.data.heartbeat).toBe('Challenges API running! 🚀');
       });
   });
 });

@@ -11,6 +11,7 @@ config({ path: resolve(__dirname, `../../../../${envFile}`) });
 const createEnvSchema = z.object({
   DATABASE_URL: z.string(),
   GITHUB_ACCESS_TOKEN: z.string(),
+  KAFKA_BROKER_URL: z.string(),
 });
 const _env = createEnvSchema.safeParse(process.env);
 
