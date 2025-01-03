@@ -24,8 +24,8 @@ This project is the implementation of a [Rocketseat backend challenge](https://g
     - [Challenges API dependencies](#challenges-api-dependencies)
     - [Corrections service dependencies](#corrections-service-dependencies)
   - [Configuring the PostgreSQL and Kafka](#configuring-the-postgresql-and-kafka)
-  - [Running migrations](#running-migrations)
   - [Configuring environmental variables](#configuring-environmental-variables)
+  - [Running migrations](#running-migrations)
   - [Running the API](#running-the-api)
     - [Running Corrections Service](#running-corrections-service)
     - [Running Challenges API](#running-challenges-api)
@@ -334,20 +334,6 @@ docker compose up -d
 
 Make sure that all three services are up and running before jumping to the next section.
 
-## Running migrations
-
-Now you have the database running, you can execute the migrations to create the database in PostgreSQL:
-
-```bash
-npx prisma migrate dev
-```
-
-you can also run the command below to avoid executing the seed script and creating predefined registries in your DB:
-
-```bash
-npx prisma migrate dev --skip-seed
-```
-
 ## Configuring environmental variables
 
 Now you will need to create a `.env` (use `.env.example` as reference) file inside the project root folder and insert the following keys:
@@ -362,6 +348,21 @@ GITHUB_ACCESS_TOKEN=
 
 - `DATABASE_URL`: is the PostgreSQL database url for the API to be able to access the database, e.g. `postgresql://<username>:<password>@localhost:5432/<database>?schema=public`
 - `GITHUB_ACCESS_TOKEN`: is the [GitHub access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) used to call the GitHub API to validate the repository URL. Create your access token (`Tokens (classic)`), give `public_repo` permission and paste it in this variable.
+
+## Running migrations
+
+Now you have the database running, you can execute the migrations to create the database in PostgreSQL:
+
+```bash
+npx prisma migrate dev
+```
+
+you can also run the command below to avoid executing the seed script and creating predefined registries in your DB:
+
+```bash
+npx prisma migrate dev --skip-seed
+```
+
 
 ## Running the API
 
