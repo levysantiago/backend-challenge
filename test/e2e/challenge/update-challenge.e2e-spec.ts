@@ -2,6 +2,7 @@ import request from 'supertest-graphql';
 import { ExecutionResult } from 'graphql';
 import { ObjMap } from 'graphql/jsutils/ObjMap';
 import { mockedApp } from '../mocked-app-helper';
+import { randomUUID } from 'node:crypto';
 
 describe('Update Challenge (e2e)', () => {
   let challengeId: string;
@@ -175,7 +176,7 @@ describe('Update Challenge (e2e)', () => {
 
     const variables = {
       updateChallengeData: {
-        id: 'non-existent-id',
+        id: randomUUID(),
         title: 'Updated Title',
         description: 'Updated Description',
       },
