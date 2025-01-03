@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  zookeeper_test:
+    container_name: test_challenge_zookeeper
+    image: "bitnami/zookeeper:3"
+    ports:
+      - "2183:2181"
+    volumes:
+      - "zookeeper_test_data:/bitnami"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - app-test-net
+
+  kafka_test:
+    container_name: test_challenge_kafka
+    image: "bitnami/kafka:2"
+    ports:
+      - "9093:9093"
+    volumes:
+      - "kafka_test_data:/bitnami"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper_test:2181
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9093
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9093
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper_test
+    networks:
+      - app-test-net
+
+networks:
+  app-test-net:
+    driver: bridge
+
+volumes:
+  zookeeper_test_data:
+    driver: local
+  kafka_test_data:
+    driver: local
