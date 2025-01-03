@@ -18,7 +18,6 @@ export class KafkaMessagingProvider
 
   async onModuleInit() {
     this.client.subscribeToResponseOf('challenge.correction');
-    await this.client.connect();
   }
 
   emitChallengeCorrection(

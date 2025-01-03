@@ -14,6 +14,6 @@ export class ChallengeModel {
   @Field(() => String)
   description: string;
 
-  @Field()
+  @Field(() => Date)
   createdAt: Date;
 }

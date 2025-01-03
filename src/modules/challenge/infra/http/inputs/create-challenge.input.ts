@@ -3,11 +3,11 @@ import { MaxLength } from 'class-validator';
 
 @InputType()
 export class CreateChallengeInput {
-  @Field()
+  @Field(() => String)
   @MaxLength(30)
   title: string;
 
-  @Field()
+  @Field(() => String)
   @MaxLength(255)
   description: string;
 }

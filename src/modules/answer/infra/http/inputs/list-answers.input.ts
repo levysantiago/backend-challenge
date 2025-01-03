@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 
 @InputType({ description: 'The input for list answers operation.' })
 export class ListAnswersInput {
-  @Field(() => AnswerFilterInput)
+  @Field(() => AnswerFilterInput, { nullable: true })
   @ValidateNested()
   @Type(() => AnswerFilterInput)
   filter?: AnswerFilterInput;

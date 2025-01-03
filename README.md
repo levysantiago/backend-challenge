@@ -29,6 +29,8 @@ This project is the implementation of a [Rocketseat backend challenge](https://g
     - [Running Corrections Service](#running-corrections-service)
     - [Running Challenges API](#running-challenges-api)
   - [Test](#test)
+    - [Unit test and Coverage](#unit-test-and-coverage)
+  - [E2E Test](#e2e-test)
 
 ## Technologies used
 
@@ -358,15 +360,29 @@ $ yarn start:prod
 
 ## Test
 
+### Unit test and Coverage
+
 To run the automatic tests of the Challenges API run:
 
 ```bash
 # unit tests
 $ yarn test
 
-# e2e tests
-$ yarn test:e2e
-
 # test coverage
 $ yarn test:cov
+```
+
+## E2E Test
+
+Before running the e2e test, you must run the Kafka broker container specific for testing. To do that you can run:
+
+```bash
+docker compose -f docker-compose.test.yml up -d
+```
+
+Then, if the new Kafka and Zookeeper containers are up and running, you can run the e2e tests:
+
+```bash
+# e2e tests
+$ yarn test:e2e
 ```
