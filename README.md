@@ -344,10 +344,14 @@ DATABASE_URL=
 
 # GITHUB
 GITHUB_ACCESS_TOKEN=
+
+# KAFKA
+KAFKA_BROKER_URL=
 ```
 
 - `DATABASE_URL`: is the PostgreSQL database url for the API to be able to access the database, e.g. `postgresql://<username>:<password>@localhost:5432/<database>?schema=public`
 - `GITHUB_ACCESS_TOKEN`: is the [GitHub access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) used to call the GitHub API to validate the repository URL. Create your access token (`Tokens (classic)`), give `public_repo` permission and paste it in this variable.
+- `KAFKA_BROKER_URL`: is the kafka broker URL for the application to connect to, e.g.: "localhost:9092"
 
 ## Running migrations
 
