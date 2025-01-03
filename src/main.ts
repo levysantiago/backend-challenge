@@ -10,6 +10,13 @@ async function bootstrap() {
   // Validation pipe
   app.useGlobalPipes(new ValidationPipe());
 
+  // Enable CORS
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   // Enable shutdown hooks
   app.enableShutdownHooks();
 
