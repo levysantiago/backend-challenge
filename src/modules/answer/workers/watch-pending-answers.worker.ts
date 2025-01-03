@@ -40,6 +40,9 @@ export class WatchPendingAnswersWorker {
       {},
     );
 
+    // Return if there is no pending answers
+    if (!answers.length) return;
+
     // Prepare answer correction handler
     const handleAnswerCorrectionCallback = async (
       result: ICorrectLessonResponse,
