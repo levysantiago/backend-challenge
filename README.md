@@ -19,6 +19,7 @@ This project is the implementation of a [Rocketseat backend challenge](https://g
     - [Non-Functional Requirements](#non-functional-requirements)
   - [GraphQL Routes](#graphql-routes)
 - [Getting started](#getting-started)
+  - [Node Version](#node-version)
   - [Installation](#installation)
     - [Challenges API dependencies](#challenges-api-dependencies)
     - [Corrections service dependencies](#corrections-service-dependencies)
@@ -292,6 +293,10 @@ The complete GraphQL schema is generated in the root folder after starting the A
 # Getting started 
 
 This project uses `yarn` as its package manager, so the commands provided below are based on `yarn`. If you prefer to use a different package manager, please replace the commands with their equivalent for your chosen tool.
+
+## Node Version
+
+Before continue, certify that you are using a Node version `>=20.x.x`.
 
 ## Installation
 
