@@ -367,6 +367,14 @@ you can also run the db seed if you want to populate the database with some regi
 npx prisma db seed
 ```
 
+And to run the Prisma studio you can run:
+
+```bash
+npx prisma studio
+```
+
+And you can access it at `http://localhost:5555`.
+
 
 ## Running the API
 
