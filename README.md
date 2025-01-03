@@ -393,8 +393,6 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
-You will be able to access the GraphQL playground at `http://localhost:3333/graphql`.
-
 ### Running Challenges API
 
 Here are the three ways you can run the API based on the environment.
@@ -409,6 +407,8 @@ $ yarn start:dev
 # production mode
 $ yarn start:prod
 ```
+
+You will be able to access the GraphQL playground at `http://localhost:3333/graphql`.
 
 ## Test
 
