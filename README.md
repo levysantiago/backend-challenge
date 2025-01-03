@@ -17,6 +17,7 @@ This project is the implementation of a [Rocketseat backend challenge](https://g
     - [Functional Requirements](#functional-requirements)
     - [Business Requirements](#business-requirements)
     - [Non-Functional Requirements](#non-functional-requirements)
+  - [GraphQL Routes](#graphql-routes)
 - [Getting started](#getting-started)
   - [Installation](#installation)
     - [Challenges API dependencies](#challenges-api-dependencies)
@@ -258,6 +259,34 @@ The fastest option is creating a raw query, for sure, but then we give up from c
 
 I also used Custom Scalar Type to automatically transform the `Date` field between the API and Client GraphQL requests. When the client sends the `Date` as ISO String the GraphQL checks all the Date fields and transform to `Date` type, on the other hand, when the API sends data to the Client, the GraphQL identify all `Date` fields and transform them to ISO String.
 
+## GraphQL Routes
+
+All Challenges and Answers routes returns by default the data inside a `{ data }` object, so that they can follow the same pattern as the listing routes that needs to respond with `data` (search result) and other attributes as `total` and `page`. Here are all Challenges and Answers routes:
+
+```graphql
+type Query {
+  listChallenges(listChallengesData: ListChallengesInput!): ChallengesListResponseDataModel!
+  listAnswers(listAnswersData: ListAnswersInput!): AnswersListResponseDataModel!
+}
+
+type Mutation {
+  createChallenge(newChallengeData: CreateChallengeInput!): ChallengeResponseDataModel!
+  updateChallenge(updateChallengeData: UpdateChallengeInput!): ChallengeResponseDataModel!
+  deleteChallenge(deleteChallengeData: DeleteChallengeInput!): ChallengeResponseDataModel!
+  answerChallenge(answerChallengeData: AnswerChallengeInput!): AnswerResponseDataModel!
+}
+```
+
+There is also a `heartbeat` route just to check if the API is running:
+
+```graphql
+type Query {
+  heartbeat: String!
+}
+```
+
+The complete GraphQL schema is generated in the root folder after starting the API as `./schema.gql`, you will also be able to access the GraphQL routes documentation on the playground `http://localhost:3333/graphql`.
+
 ---
 
 # Getting started 
@@ -344,6 +373,8 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
+You will be able to access the GraphQL playground at `http://localhost:3333/graphql`.
+
 ### Running Challenges API
 
 Here are the three ways you can run the API based on the environment.
@@ -380,10 +411,11 @@ Before running the e2e test, you must run the Kafka broker container specific fo
 ```bash
 docker compose -f docker-compose.test.yml up -d
 ```
+`Node`: About the database, a new testing schema is created in the PostgreSQL database on every test suite and deleted after the test is finished.
 
 Then, if the new Kafka and Zookeeper containers are up and running, you can run the e2e tests:
 
 ```bash
 # e2e tests
-$ yarn test:e2e
+yarn test:e2e
 ```
