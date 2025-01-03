@@ -358,13 +358,13 @@ KAFKA_BROKER_URL=
 Now you have the database running, you can execute the migrations to create the database in PostgreSQL:
 
 ```bash
-npx prisma migrate dev
+npx prisma migrate deploy
 ```
 
-you can also run the command below to avoid executing the seed script and creating predefined registries in your DB:
+you can also run the db seed if you want to populate the database with some registries.
 
 ```bash
-npx prisma migrate dev --skip-seed
+npx prisma db seed
 ```
 
 
