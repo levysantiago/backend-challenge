@@ -5,10 +5,14 @@ import { UpdateChallengeError } from '../infra/errors/update-challenge.error';
 import { AppError } from '@shared/resources/errors/app.error';
 import { IUpdateChallengeServiceDTO } from './dtos/iupdate-challenge-service.dto';
 import { IUpdateChallengeServiceResponseDTO } from './dtos/iupdate-challenge-service-response.dto';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 
 @Injectable()
 export class UpdateChallengeService {
-  constructor(private challengesRepository: ChallengesRepository) {}
+  constructor(
+    private logger: LoggerProvider,
+    private challengesRepository: ChallengesRepository,
+  ) {}
 
   async execute({
     id,
@@ -30,6 +34,11 @@ export class UpdateChallengeService {
       return { data: challenge };
     } catch (err) {
       if (err instanceof AppError) throw err;
+
+      this.logger.error(
+        `Failed to update challenges: ${err.message}`,
+        'UpdateChallengeService',
+      );
       throw new UpdateChallengeError();
     }
   }

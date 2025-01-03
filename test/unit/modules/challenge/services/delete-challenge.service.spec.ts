@@ -5,9 +5,11 @@ import { ChallengesRepository } from '@modules/challenge/repositories/challenges
 import { DeleteChallengeService } from '@modules/challenge/services/delete-challenge.service';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { ChallengeNotFoundError } from '@modules/challenge/infra/errors/challenge-not-found.error';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 
 describe('DeleteChallengeService', () => {
   let sut: DeleteChallengeService;
+  let logger: MockProxy<LoggerProvider>;
   let challengesRepository: MockProxy<ChallengesRepository>;
 
   const fakeChallenge: Challenge = {
@@ -18,13 +20,14 @@ describe('DeleteChallengeService', () => {
   };
 
   beforeAll(() => {
+    logger = mock();
     challengesRepository = mock();
 
     challengesRepository.delete.mockResolvedValue(fakeChallenge);
   });
 
   beforeEach(() => {
-    sut = new DeleteChallengeService(challengesRepository);
+    sut = new DeleteChallengeService(logger, challengesRepository);
   });
 
   describe('execute', () => {

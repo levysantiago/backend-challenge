@@ -4,19 +4,22 @@ import { CreateChallengeError } from '@modules/challenge/infra/errors/create-cha
 import { ChallengesRepository } from '@modules/challenge/repositories/challenges.repository';
 import { CreateChallengeService } from '@modules/challenge/services/create-challenge.service';
 import { mock, MockProxy } from 'jest-mock-extended';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 
 describe('CreateChallengeService', () => {
   let sut: CreateChallengeService;
+  let logger: MockProxy<LoggerProvider>;
   let challengesRepository: MockProxy<ChallengesRepository>;
 
   beforeAll(() => {
+    logger = mock();
     challengesRepository = mock();
 
     challengesRepository.create.mockResolvedValue();
   });
 
   beforeEach(() => {
-    sut = new CreateChallengeService(challengesRepository);
+    sut = new CreateChallengeService(logger, challengesRepository);
   });
 
   describe('execute', () => {

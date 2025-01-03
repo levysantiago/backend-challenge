@@ -8,8 +8,6 @@ describe('HeartbeatService', () => {
   });
 
   describe('execute', () => {
-    console.log(process.env);
-
     it('should be able to return heartbeat message', () => {
       // Act
       const result = sut.execute();

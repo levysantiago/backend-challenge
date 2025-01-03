@@ -5,10 +5,14 @@ import { IUpdateAnswerServiceDTO } from './dtos/iupdate-answer-service.dto';
 import { IUpdateAnswerServiceResponseDTO } from './dtos/iupdate-answer-service-response.dto';
 import { AnswerNotFoundError } from '../infra/errors/answer-not-found.error';
 import { UpdateAnswerError } from '../infra/errors/update-answer.error';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 
 @Injectable()
 export class UpdateAnswerService {
-  constructor(private answersRepository: AnswersRepository) {}
+  constructor(
+    private logger: LoggerProvider,
+    private answersRepository: AnswersRepository,
+  ) {}
 
   async execute({
     id,
@@ -28,7 +32,19 @@ export class UpdateAnswerService {
 
       return { data: answer };
     } catch (err) {
-      if (err instanceof AppError) throw err;
+      if (err instanceof AppError) {
+        this.logger.error(
+          `Failed to update answer: ${err.message}`,
+          'UpdateAnswerService',
+        );
+
+        throw err;
+      }
+
+      this.logger.error(
+        `Failed to update answer: ${err.message}`,
+        'UpdateAnswerService',
+      );
       throw new UpdateAnswerError({ reason: err.message });
     }
   }

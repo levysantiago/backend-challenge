@@ -4,9 +4,11 @@ import { AnswersRepository } from '@modules/answer/repositories/answers.reposito
 import { AnswerStatus } from '@modules/answer/infra/types/answer-status';
 import { IListAnswersServiceDTO } from '@modules/answer/services/dtos/ilist-answers-service.dto';
 import { ListAnswersError } from '@modules/answer/infra/errors/list-answers.error';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 
 describe('ListAnswersService', () => {
   let sut: ListAnswersService;
+  let logger: MockProxy<LoggerProvider>;
   let answersRepository: MockProxy<AnswersRepository>;
 
   const fakeFindByResponse = {
@@ -32,12 +34,13 @@ describe('ListAnswersService', () => {
   };
 
   beforeAll(() => {
+    logger = mock();
     answersRepository = mock();
     answersRepository.findBy.mockResolvedValue(fakeFindByResponse);
   });
 
   beforeEach(() => {
-    sut = new ListAnswersService(answersRepository);
+    sut = new ListAnswersService(logger, answersRepository);
   });
 
   describe('execute', () => {
