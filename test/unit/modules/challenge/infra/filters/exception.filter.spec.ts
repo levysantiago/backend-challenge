@@ -1,12 +1,19 @@
 import { InternalServerError } from '@shared/infra/errors/internal-server.error';
 import { GraphQLHttpExceptionFilter } from '@shared/infra/filters/exception.filter';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 import { GraphQLError } from 'graphql';
+import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('GraphQLHttpExceptionFilter', () => {
   let filter: GraphQLHttpExceptionFilter;
+  let logger: MockProxy<LoggerProvider>;
+
+  beforeAll(() => {
+    logger = mock();
+  });
 
   beforeEach(() => {
-    filter = new GraphQLHttpExceptionFilter();
+    filter = new GraphQLHttpExceptionFilter(logger);
   });
 
   it('should return the GraphQLError as-is when not an InternalServerError', () => {
@@ -23,16 +30,13 @@ describe('GraphQLHttpExceptionFilter', () => {
   it('should log the error and return the same error if it is an InternalServerError', () => {
     // Arrange
     const internalError = new InternalServerError();
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+    const loggerSpy = jest.spyOn(logger, 'error');
 
     // Act
     const result = filter.catch(internalError);
 
     // Assert
-    expect(consoleSpy).toHaveBeenCalledWith(internalError);
+    expect(loggerSpy).toHaveBeenCalledWith(internalError);
     expect(result).toBe(internalError);
-
-    // Cleanup
-    consoleSpy.mockRestore();
   });
 });

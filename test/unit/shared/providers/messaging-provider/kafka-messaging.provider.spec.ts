@@ -1,10 +1,12 @@
 import { ClientKafka } from '@nestjs/microservices';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 import { ICorrectLessonResponse } from '@shared/providers/messaging-provider/dtos/icorrect-lessons-response';
 import { KafkaMessagingProvider } from '@shared/providers/messaging-provider/implementations/kafka-messaging.provider';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('KafkaMessagingProvider', () => {
   let sut: KafkaMessagingProvider;
+  let logger: MockProxy<LoggerProvider>;
   let clientKafka: MockProxy<ClientKafka>;
 
   const mockResponse: ICorrectLessonResponse = {
@@ -15,6 +17,7 @@ describe('KafkaMessagingProvider', () => {
   };
 
   beforeAll(() => {
+    logger = mock();
     clientKafka = mock();
 
     clientKafka.subscribeToResponseOf.mockReturnValue();
@@ -28,7 +31,7 @@ describe('KafkaMessagingProvider', () => {
   });
 
   beforeEach(async () => {
-    sut = new KafkaMessagingProvider(clientKafka);
+    sut = new KafkaMessagingProvider(clientKafka, logger);
   });
 
   it('should be defined', () => {
@@ -73,8 +76,8 @@ describe('KafkaMessagingProvider', () => {
         .fn()
         .mockRejectedValueOnce(new Error('Callback error'));
 
-      const consoleSpy = jest
-        .spyOn(console, 'error')
+      const loggerSpy = jest
+        .spyOn(logger, 'error')
         .mockImplementation(() => {});
 
       // Act
@@ -83,7 +86,7 @@ describe('KafkaMessagingProvider', () => {
       // Assert
       expect(callbackService).toHaveBeenCalledWith(mockResponse);
 
-      consoleSpy.mockRestore();
+      loggerSpy.mockRestore();
     });
 
     it('should log errors when microservice communication fails', async () => {
@@ -95,20 +98,20 @@ describe('KafkaMessagingProvider', () => {
       };
       clientKafka.send.mockReturnValueOnce(mockObservable as any);
 
-      const consoleSpy = jest
-        .spyOn(console, 'error')
+      const loggerSpy = jest
+        .spyOn(logger, 'error')
         .mockImplementation(() => {});
 
       // Act
       sut.emitChallengeCorrection(message, jest.fn());
 
       // Assert
-      expect(consoleSpy).toHaveBeenCalledWith(
-        '[KafkaMessagingProvider] Error in microservice communication:',
-        expect.any(Error),
+      expect(loggerSpy).toHaveBeenCalledWith(
+        'Error in microservice communication: Communication error',
+        'KafkaMessagingProvider',
       );
 
-      consoleSpy.mockRestore();
+      loggerSpy.mockRestore();
     });
   });
 

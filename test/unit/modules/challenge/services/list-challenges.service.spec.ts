@@ -3,9 +3,11 @@ import { ListChallengesError } from '@modules/challenge/infra/errors/list-challe
 import { ChallengesRepository } from '@modules/challenge/repositories/challenges.repository';
 import { ListChallengesService } from '@modules/challenge/services/list-challenges.service';
 import { mock, MockProxy } from 'jest-mock-extended';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 
 describe('ListChallengeService', () => {
   let sut: ListChallengesService;
+  let logger: MockProxy<LoggerProvider>;
   let challengesRepository: MockProxy<ChallengesRepository>;
 
   const fakeFindByResponse = {
@@ -27,12 +29,14 @@ describe('ListChallengeService', () => {
   };
 
   beforeAll(() => {
+    logger = mock();
     challengesRepository = mock();
+
     challengesRepository.findBy.mockResolvedValue(fakeFindByResponse);
   });
 
   beforeEach(() => {
-    sut = new ListChallengesService(challengesRepository);
+    sut = new ListChallengesService(logger, challengesRepository);
   });
 
   describe('execute', () => {

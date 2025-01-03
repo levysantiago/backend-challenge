@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { GraphQLHttpExceptionFilter } from '@shared/infra/filters/exception.filter';
 import { ValidationPipe } from '@nestjs/common';
 import './shared/resources/env';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,7 +22,8 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   // Apply the filter globally
-  app.useGlobalFilters(new GraphQLHttpExceptionFilter());
+  const logger = app.get(LoggerProvider);
+  app.useGlobalFilters(new GraphQLHttpExceptionFilter(logger));
 
   await app.listen(3333);
 }

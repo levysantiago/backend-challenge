@@ -231,6 +231,10 @@ So here are some examples of services from each domain:
 
 - To be able to notify the corrections service, a shared interface `MessagingProvider` was created using the `KafkaMessagingProvider` as implementation, this provider is used by the `SubmitAnswerToCorrectionService` to emit the answer to the correction service, and the `SubmitAnswerToCorrectionService` is used inside the `AnswerChallengeResolver` that calls this service right after calling the `AnswerChallengeService` which creates a new `Answer`.
 
+**Pending Answer Correction Worker**
+
+- In order to add a new "correction layer" to ensure that the Answer will be corrected, I created a worker that on every hour verifies if there is any Answer that was not corrected yet ("Pending"). This worker was created to handle cases where the API for some reason missed the `challenges.correction.reply` topic, so this worker keeps checking if there is any pending answer, and if there is, it emits `challenges.correction` topic to the correction service again.
+
 ### Non-Functional Requirements
 
 **Listing Answers and Challenges**

@@ -8,9 +8,11 @@ import { SubmitAnswerToCorrectionService } from './services/submit-answer-to-cor
 import { UpdateAnswerService } from './services/update-answer.service';
 import { ListAnswersResolver } from './infra/http/resolvers/list-answers.resolver';
 import { ListAnswersService } from './services/list-answers.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { WatchPendingAnswersWorker } from './workers/watch-pending-answers.worker';
 
 @Module({
-  imports: [ChallengeModule],
+  imports: [ScheduleModule.forRoot(), ChallengeModule],
   providers: [
     // Repositories
     {
@@ -27,6 +29,9 @@ import { ListAnswersService } from './services/list-answers.service';
     // Resolvers
     AnswerChallengeResolver,
     ListAnswersResolver,
+
+    // Workers
+    WatchPendingAnswersWorker,
   ],
 })
 export class AnswerModule {}

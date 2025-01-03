@@ -9,6 +9,7 @@ import { InvalidChallengeOfAnswerError } from '../infra/errors/invalid-challenge
 import { GitHubUrlHelper } from '@shared/resources/helpers/github-url.helper';
 import { AppError } from '@shared/resources/errors/app.error';
 import { InvalidRepositoryUrlError } from '../infra/errors/invalid-repository-url.error';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 
 type IErrorId = 'invalidChallenge' | 'invalidRepositoryUrl';
 
@@ -20,6 +21,7 @@ export class AnswerChallengeService {
   };
 
   constructor(
+    private logger: LoggerProvider,
     private answersRepository: AnswersRepository,
     private challengesRepository: ChallengesRepository,
   ) {}
@@ -64,6 +66,11 @@ export class AnswerChallengeService {
       return { data: answer };
     } catch (err) {
       if (err instanceof AppError) throw err;
+
+      this.logger.error(
+        `Failed to answer challenge: ${err.message}`,
+        'AnswerChallengeService',
+      );
       throw new AnswerChallengeError({ reason: err.message });
     }
   }

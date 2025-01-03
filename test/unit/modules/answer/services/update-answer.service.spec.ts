@@ -4,10 +4,12 @@ import { UpdateAnswerError } from '@modules/answer/infra/errors/update-answer.er
 import { AnswersRepository } from '@modules/answer/repositories/answers.repository';
 import { IUpdateAnswerServiceDTO } from '@modules/answer/services/dtos/iupdate-answer-service.dto';
 import { UpdateAnswerService } from '@modules/answer/services/update-answer.service';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('UpdateAnswerService', () => {
   let sut: UpdateAnswerService;
+  let logger: MockProxy<LoggerProvider>;
   let answersRepository: MockProxy<AnswersRepository>;
 
   const fakeAnswer: Answer = {
@@ -20,6 +22,7 @@ describe('UpdateAnswerService', () => {
   };
 
   beforeAll(() => {
+    logger = mock();
     answersRepository = mock();
 
     // Mock ChallengesRepository
@@ -27,7 +30,7 @@ describe('UpdateAnswerService', () => {
   });
 
   beforeEach(() => {
-    sut = new UpdateAnswerService(answersRepository);
+    sut = new UpdateAnswerService(logger, answersRepository);
   });
 
   describe('execute', () => {

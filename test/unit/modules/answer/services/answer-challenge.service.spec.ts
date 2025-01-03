@@ -6,11 +6,13 @@ import { AnswersRepository } from '@modules/answer/repositories/answers.reposito
 import { AnswerChallengeService } from '@modules/answer/services/answer-challenge.service';
 import { IAnswerChallengeServiceDTO } from '@modules/answer/services/dtos/ianswer-challenge-service.dto';
 import { ChallengesRepository } from '@modules/challenge/repositories/challenges.repository';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 import { GitHubUrlHelper } from '@shared/resources/helpers/github-url.helper';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('AnswerChallengeService', () => {
   let sut: AnswerChallengeService;
+  let logger: MockProxy<LoggerProvider>;
   let answersRepository: MockProxy<AnswersRepository>;
   let challengesRepository: MockProxy<ChallengesRepository>;
 
@@ -24,6 +26,7 @@ describe('AnswerChallengeService', () => {
   beforeAll(() => {
     challengesRepository = mock();
     answersRepository = mock();
+    logger = mock();
 
     // Mock ChallengesRepository
     challengesRepository.find.mockResolvedValue(fakeChallenge);
@@ -33,7 +36,11 @@ describe('AnswerChallengeService', () => {
   });
 
   beforeEach(() => {
-    sut = new AnswerChallengeService(answersRepository, challengesRepository);
+    sut = new AnswerChallengeService(
+      logger,
+      answersRepository,
+      challengesRepository,
+    );
   });
 
   describe('execute', () => {

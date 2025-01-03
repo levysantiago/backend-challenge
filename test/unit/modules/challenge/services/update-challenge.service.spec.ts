@@ -5,9 +5,11 @@ import { UpdateChallengeError } from '@modules/challenge/infra/errors/update-cha
 import { ChallengesRepository } from '@modules/challenge/repositories/challenges.repository';
 import { UpdateChallengeService } from '@modules/challenge/services/update-challenge.service';
 import { mock, MockProxy } from 'jest-mock-extended';
+import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
 
 describe('UpdateChallengeService', () => {
   let sut: UpdateChallengeService;
+  let logger: MockProxy<LoggerProvider>;
   let challengesRepository: MockProxy<ChallengesRepository>;
 
   const fakeChallenge: Challenge = {
@@ -18,6 +20,7 @@ describe('UpdateChallengeService', () => {
   };
 
   beforeAll(() => {
+    logger = mock();
     challengesRepository = mock();
 
     challengesRepository.save.mockResolvedValue();
@@ -25,7 +28,7 @@ describe('UpdateChallengeService', () => {
   });
 
   beforeEach(() => {
-    sut = new UpdateChallengeService(challengesRepository);
+    sut = new UpdateChallengeService(logger, challengesRepository);
   });
 
   describe('execute', () => {
