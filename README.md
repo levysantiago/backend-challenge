@@ -15,7 +15,6 @@ This project is the implementation of a [Rocketseat backend challenge](https://g
   - [Layers](#layers)
   - [Requirements](#requirements)
     - [Functional Requirements](#functional-requirements)
-    - [Important Decisions/Choices](#important-decisionschoices)
     - [Business Requirements](#business-requirements)
     - [Non-Functional Requirements](#non-functional-requirements)
 - [Getting started](#getting-started)
@@ -171,8 +170,8 @@ This section explains how the requirements for the project where addressed.
   - The `Answer` must be registered with status "Pending"
   - The `Answer` should be registered with status "Error" if the related `Challenge` does not exists.
   - The `Answer` should be registered with status "Error" if the repository URL of the `Answer` is not a GitHub repository.
-  - After the `Answer` is registered, the corrections service must be notified.
-  - When the corrections service returns the correction result of an `Answer`, this `Answer` must be updated with the new **status** and **grade**.
+  - After the `Answer` is registered with no errors, the corrections service must be notified.
+  - When the corrections service returns the correction result of an `Answer`, this `Answer` must be updated in database with the new **status** and **grade**.
 
 - **Non-Functional Requirements**
   - The `Challenge` listing should filter by **title** and **description** and paginate it.
@@ -201,19 +200,19 @@ So here are some examples of services from each domain:
   - `SubmitAnswerToCorrectionService` - Submits an already registered answer to the correction microservice.
   - `UpdateAnswerService` - Updates the `grade` and `status` of an answer. This service is called as a callback after the corrections microservice returns a correction result.
 
-### Important Decisions/Choices
+`Important Decisions/Choices`:
 
 **CASCADE on delete Challenge**
 - In Prisma Schema the `CASCADE` option was turned on, so when deleting a Challenge, all Answers related to it will be deleted too. Depending on the project specific needs, might be interesting to keep the Challenge registered in database and just set a new attribute to inform that this registry is deleted/archived. This second option can be used if we want to keep the answers saved and use them as a history of answers even if the Challenge "doesn't exist" anymore.
 
 **UpdateAnswerService as a callback**
-- The `UpdateAnswerService` is sent as a callback for the `SubmitAnswerToCorrectionService` by the `AnswerChallengeResolver`, so that the `SubmitAnswerToCorrectionService` doesn't need to know much about what is the service that will update the answer after receiving the correction response, it just receive a callback and execute it. It was built this way to decouple the dependency of the two services and maintain the consistency.
+- The `UpdateAnswerService` is sent as a callback for the `SubmitAnswerToCorrectionService` by the `AnswerChallengeResolver`, so that the `SubmitAnswerToCorrectionService` doesn't need to know much about what is the service that will update the answer after receiving the correction response, it just receive a callback and execute it. It was built this way to decouple the dependency between the two services and maintain the consistency.
 
 **Answers list returning also challenge titles**
 - The Answers returned in `ListAnswersService` also returns the challenge title for each answer, this was done by creating a Prisma query in the `PrismaAnswersRepository` that joins the two tables and already returns also the challenge title for the answers listing. I added this feature so that the client can print also from which challenge this answer is from without needing to make another request.
 
 **GitHub URL validation Rate Limiting**
-- It was created a [GitHubUrlHelper](./src/shared/resources/helpers/github-url.helper.ts) to handle the Answer repository URL validation. This helper validates the URL structure and also consults the GitHub website to verify if this repository really exists. The rate limiting for consulting the public repository URL is `60 tries`, and the rate limiting for consulting a public repository through the GitHub API using a access token as Bearer token is `5000 tries`. For this project I decided to use both of them, first try to consult the repository by requesting the public website, if it fails, verify the repository through the GitHub API as a fallback. 
+- It was created a [GitHubUrlHelper](./src/shared/resources/helpers/github-url.helper.ts) to handle the Answer's repository URL validation. This helper validates the URL structure and also consults the GitHub website to verify if this repository really exists. There is no rate limiting for consulting the public repository webpage, but if requests are made too frequently the GitHub might temporarily block the IP and the request will fail. On the other hand, the rate limiting for consulting the repository through GitHub API without access token is `60 tries`, and the rate limiting for consulting a public repository through the GitHub API using a access token as Bearer token is `5000 tries`. For this project I decided to use both of them, first try to consult the repository by requesting the public webpage, if it fails, verify the repository through the GitHub API as a fallback. 
 - Also I used `fetch` instead of `axios` (that can be clearer in some cases) because this is the only part that the project calls another API and doesn't need to handle response data. As `fetch` is lighter than `axios`, I preferred to use the `fetch` in this case.
 
 ### Business Requirements
@@ -257,7 +256,9 @@ The fastest option is creating a raw query, for sure, but then we give up from c
 
 **Custom Scalar Types**
 
-I also used Custom Scalar Type to automatically transform the Date field between the API and Client GraphQL requests. When the client sends the Date as ISO String the GraphQL checks all the Date fields and transform to `Date` type, on the other hand, when the API sends data to the Client, the GraphQL identify all Date fields and transform them to ISO String.
+I also used Custom Scalar Type to automatically transform the `Date` field between the API and Client GraphQL requests. When the client sends the `Date` as ISO String the GraphQL checks all the Date fields and transform to `Date` type, on the other hand, when the API sends data to the Client, the GraphQL identify all `Date` fields and transform them to ISO String.
+
+---
 
 # Getting started 
 
