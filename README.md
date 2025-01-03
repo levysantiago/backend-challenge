@@ -308,6 +308,8 @@ To install the dependencies of this API, just type:
 $ yarn
 ```
 
+This will also configure the `husky` and `commitlint` in your local repository, so that on every commit it will validate if the commit message is in accordance with Conventional Commit and also will execute the Unit tests.
+
 ### Corrections service dependencies
 
 In another terminal access the `packages/corrections` folder.
