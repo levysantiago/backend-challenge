@@ -292,6 +292,8 @@ type Query {
 
 The complete GraphQL schema is generated in the root folder after starting the API as `./schema.gql`, you will also be able to access the GraphQL routes documentation on the playground `http://localhost:3333/graphql`.
 
+Also there is a [Public Postman Workspace](https://www.postman.com/levysdev/workspace/challenges-api) with GraphQL queries and mutations already configured that might facilitate for you to test the API.
+
 ---
 
 # Getting started 
@@ -412,7 +414,7 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
-You will be able to access the GraphQL playground at `http://localhost:3333/graphql`.
+You will be able to access the GraphQL playground at `http://localhost:3333/graphql` or you can also use the [Public Postman Workspace](https://www.postman.com/levysdev/workspace/challenges-api).
 
 ## Test
 
