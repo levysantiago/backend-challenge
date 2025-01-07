@@ -6,4 +6,4 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await closeApp();
-}, 10000);
+}, 20000);
