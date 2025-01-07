@@ -1,6 +1,20 @@
 version: "3"
 
 services:
+  postgres_test:
+    container_name: test_challenge_postgres
+    image: "bitnami/postgresql"
+    restart: always
+    ports:
+      - "5433:5433"
+    environment:
+      - POSTGRESQL_USERNAME=docker
+      - POSTGRESQL_PASSWORD=docker
+      - POSTGRESQL_PORT_NUMBER=5433
+      - POSTGRESQL_DATABASE=rocketseat_challenge_test
+    volumes:
+      - "postgresql_test_data:/bitnami/postgresql"
+
   zookeeper_test:
     container_name: test_challenge_zookeeper
     image: "bitnami/zookeeper:3"
@@ -40,4 +54,6 @@ volumes:
   zookeeper_test_data:
     driver: local
   kafka_test_data:
+    driver: local
+  postgresql_test_data:
     driver: local

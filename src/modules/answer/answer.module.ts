@@ -9,7 +9,7 @@ import { UpdateAnswerService } from './services/update-answer.service';
 import { ListAnswersResolver } from './infra/http/resolvers/list-answers.resolver';
 import { ListAnswersService } from './services/list-answers.service';
 import { ScheduleModule } from '@nestjs/schedule';
-import { WatchPendingAnswersWorker } from './workers/watch-pending-answers.worker';
+import { ConsumeAnswerCorrectionInitialization } from './infra/initialization/consume-answer-correction.initialization';
 
 @Module({
   imports: [ScheduleModule.forRoot(), ChallengeModule],
@@ -30,8 +30,8 @@ import { WatchPendingAnswersWorker } from './workers/watch-pending-answers.worke
     AnswerChallengeResolver,
     ListAnswersResolver,
 
-    // Workers
-    WatchPendingAnswersWorker,
+    // Initializers
+    ConsumeAnswerCorrectionInitialization,
   ],
 })
 export class AnswerModule {}
