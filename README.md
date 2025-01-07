@@ -25,10 +25,15 @@ This project is the implementation of a [Rocketseat backend challenge](https://g
     - [Corrections service dependencies](#corrections-service-dependencies)
   - [Configuring the PostgreSQL and Kafka](#configuring-the-postgresql-and-kafka)
   - [Configuring environmental variables](#configuring-environmental-variables)
+    - [Challenges API](#challenges-api-1)
+    - [Corrections Service](#corrections-service)
   - [Running migrations](#running-migrations)
-  - [Running the API](#running-the-api)
+  - [Running the API Locally](#running-the-api-locally)
     - [Running Corrections Service](#running-corrections-service)
     - [Running Challenges API](#running-challenges-api)
+  - [Running the API on Docker](#running-the-api-on-docker)
+    - [Configure production env variables](#configure-production-env-variables)
+    - [Run App Docker file](#run-app-docker-file)
   - [Test](#test)
     - [Unit test and Coverage](#unit-test-and-coverage)
   - [E2E Test](#e2e-test)
@@ -338,9 +343,14 @@ Make sure that all three services are up and running before jumping to the next 
 
 ## Configuring environmental variables
 
+### Challenges API
+
 Now you will need to create a `.env` (use `.env.example` as reference) file inside the project root folder and insert the following keys:
 
 ```env
+# API
+SERVER_PORT=3333
+
 # DATABASE
 DATABASE_URL=
 
@@ -354,6 +364,15 @@ KAFKA_BROKER_URL=
 - `DATABASE_URL`: is the PostgreSQL database url for the API to be able to access the database, e.g. `postgresql://<username>:<password>@localhost:5432/<database>?schema=public`
 - `GITHUB_ACCESS_TOKEN`: is the [GitHub access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) used to call the GitHub API to validate the repository URL. Create your access token (`Tokens (classic)`), give `public_repo` permission and paste it in this variable.
 - `KAFKA_BROKER_URL`: is the kafka broker URL for the application to connect to, e.g.: "localhost:9092"
+
+### Corrections Service
+
+For Docker config reasons, you must also create a `.env` file inside the `packages/corrections` and use the `packages/corrections/.env.example` as reference:
+
+```env
+# KAFKA
+KAFKA_BROKER_URL="localhost:9092"
+```
 
 ## Running migrations
 
@@ -378,7 +397,7 @@ npx prisma studio
 And you can access it at `http://localhost:5555`.
 
 
-## Running the API
+## Running the API Locally
 
 ### Running Corrections Service
 
@@ -408,6 +427,83 @@ $ yarn start:dev
 
 # production mode
 $ yarn start:prod
+```
+
+You will be able to access the GraphQL playground at `http://localhost:3333/graphql` or you can also use the [Public Postman Workspace](https://www.postman.com/levysdev/workspace/challenges-api).
+
+## Running the API on Docker
+
+Some updates were needed on the corrections service to be able to execute it properly on docker. The updates were:
+
+- Install `dotenv` package
+- Create a `.env.example` to be used as reference to create `.env` and `.env.production`.
+- Update `main.ts` kafka broker to use the env variable instead of directly `localhost:9092`:
+
+<details>
+<summary>Click to ee details of 'packages/corrections/main.ts' update</summary>
+
+```diff
+const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+  AppModule,
+  {
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+-        brokers: ["localhost:9092"],
++        brokers: [process.env.KAFKA_BROKER_URL],
+      },
+      consumer: {
+        groupId: 'challenge-consumer',
+      },
+    },
+  },
+);
+```
+</details>
+
+Also the `docker-compose.yml` file where updated adding the postgresql to the `app-net` network and adding some variables to kafka config to allow kafka to deal different listeners (localhost and docker internal container):
+
+<details>
+<summary>Click to see details of docker compose file updates on kafka config</summary>
+
+```diff
+  - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+  - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+-  - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
++  - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9094,PLAINTEXT_HOST://0.0.0.0:9092
++  - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9094,PLAINTEXT_HOST://localhost:9092
++  - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
++  - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+  - ALLOW_PLAINTEXT_LISTENER=yes
+```
+</details>
+
+### Configure production env variables
+
+Before running the app docker file, you must create a `.env.production` on the root of the Challenges API and also create a `.env.production` on `packages/corrections`.
+
+Remember that instead of using the services host as `localhost` use the container name of the service. Using this values below as reference you just need to set the `GITHUB_ACCESS_TOKEN`:
+
+```env
+# API
+SERVER_PORT=3333
+
+#DATABASE
+DATABASE_URL="postgresql://docker:docker@postgres:5432/rocketseat_challenge?schema=public"
+
+# GITHUB
+GITHUB_ACCESS_TOKEN=
+
+# KAFKA
+KAFKA_BROKER_URL="challenge_kafka:9094"
+```
+
+### Run App Docker file
+
+There is a `docker-compose.app.yml` file specific for running the Challenges API and Corrections service on docker. Use the command below to create the containers:
+
+```bash
+docker compose -f docker-compose.app.yml up -d
 ```
 
 You will be able to access the GraphQL playground at `http://localhost:3333/graphql` or you can also use the [Public Postman Workspace](https://www.postman.com/levysdev/workspace/challenges-api).
