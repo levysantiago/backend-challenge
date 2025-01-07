@@ -42,3 +42,4 @@ schema.gql
 
 # environmental variables
 .env
+.env.production

@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  corrections-service:
+    container_name: "corrections_service"
+    image: node:20.12.1
+    entrypoint: ["sh", "./entrypoint.sh"]
+    build:
+      context: ./packages/corrections
+    env_file:
+      - ./packages/corrections/.env.production
+    volumes:
+      - ./packages/corrections:/usr/corrections-service
+      - ./packages/corrections/entrypoint.sh:/entrypoint.sh
+      - /usr/corrections-service/node_modules
+    networks: 
+      - app-net
+
+  challenges-api:
+    container_name: "challenges_api"
+    image: node:20.12.1
+    entrypoint: ["sh", "./entrypoint.sh"]
+    build:
+      context: .
+    env_file:
+      - ./.env.production
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    volumes:
+      - ./:/usr/backend-challenge
+      - ./entrypoint.sh:/entrypoint.sh
+      - /usr/backend-challenge/node_modules
+    depends_on: 
+      - corrections-service
+    networks: 
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge

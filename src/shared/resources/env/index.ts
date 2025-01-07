@@ -9,8 +9,16 @@ if (process.env.NODE_ENV === 'test') {
 config({ path: resolve(__dirname, `../../../../${envFile}`), override: true });
 
 const createEnvSchema = z.object({
+  // API
+  SERVER_PORT: z.coerce.number(),
+
+  // DATABASE
   DATABASE_URL: z.string(),
+
+  // GITHUB
   GITHUB_ACCESS_TOKEN: z.string(),
+
+  // KAFKA
   KAFKA_BROKER_URL: z.string(),
 });
 const _env = createEnvSchema.safeParse(process.env);
