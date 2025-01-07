@@ -4,6 +4,7 @@ import { GraphQLHttpExceptionFilter } from '@shared/infra/filters/exception.filt
 import { ValidationPipe } from '@nestjs/common';
 import './shared/resources/env';
 import { LoggerProvider } from '@shared/providers/logger-provider/types/logger.provider';
+import { env } from './shared/resources/env';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,6 +26,6 @@ async function bootstrap() {
   const logger = app.get(LoggerProvider);
   app.useGlobalFilters(new GraphQLHttpExceptionFilter(logger));
 
-  await app.listen(3333);
+  await app.listen(env.SERVER_PORT);
 }
 bootstrap();
