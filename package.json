@@ -18,7 +18,7 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "dotenv -e .env.test -- jest --runInBand --silent",
     "test:watch": "dotenv -e .env.test -- jest --watch",
-    "test:cov": "dotenv -e .env.test -- jest --coverage --silent",
+    "test:cov": "dotenv -e .env.test -- jest --coverage --runInBand --silent",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "dotenv -e .env.test -- jest --config ./jest-e2e.config.js --runInBand --silent",
     "postinstall": "husky init && echo \"npx --no -- commitlint --edit\" > .husky/commit-msg",

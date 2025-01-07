@@ -30,3 +30,52 @@ jobs:
     
     - name: Running tests
       run: yarn test
+  
+  coverage:
+    if: github.event_name != 'pull_request'
+    name: coverage
+    needs: [unit-tests]
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.12.1]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Check if branch exists and delete it
+      run: |
+        BRANCH_NAME="badges"
+        if git ls-remote --heads origin $BRANCH_NAME | grep -q $BRANCH_NAME; then
+          echo "Branch $BRANCH_NAME exists. Deleting it."
+          git push origin --delete $BRANCH_NAME
+        fi
+
+    - name: Create badges branch
+      run: git checkout -b badges
+
+    - name: Install yarn
+      run: npm install yarn -g
+    
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+        
+    - name: Running tests
+      run: yarn test:cov
+
+    - name: Generating coverage badges
+      uses: jpb06/jest-badges-action@latest
+      with:
+        branches: '*'
+        target-branch: badges
+        commit-message: "chore: creating badges"
+
+    - name: Push badges branch
+      run: git push origin badges

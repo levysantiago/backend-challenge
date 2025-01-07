@@ -1,3 +1,9 @@
+![Statements](https://github.com/levysantiago/backend-challenge/blob/badges/badges/coverage-statements.svg)
+![Lines](https://github.com/levysantiago/backend-challenge/blob/badges/badges/coverage-lines.svg)
+![Branches](https://github.com/levysantiago/backend-challenge/blob/badges/badges/coverage-branches.svg)
+![Functions](https://github.com/levysantiago/backend-challenge/blob/badges/badges/coverage-functions.svg)
+![Jest coverage](https://github.com/levysantiago/backend-challenge/blob/badges/badges/coverage-jest%20coverage.svg)
+
 # Challenges API
 
 This project is the implementation of a [Rocketseat backend challenge](https://github.com/Rocketseat/backend-challenge) a service that manages the challenges answers sent by the Rocketseat students.
