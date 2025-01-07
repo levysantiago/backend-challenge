@@ -10,18 +10,12 @@ export class SubmitAnswerToCorrectionService {
     private readonly messagingProvider: MessagingProvider,
   ) {}
 
-  execute({
-    answer,
-    handleAnswerCorrectionCallback,
-  }: ISubmitAnswerToCorrectionServiceDTO): void {
+  execute({ answer }: ISubmitAnswerToCorrectionServiceDTO): void {
     try {
-      this.messagingProvider.emitChallengeCorrection(
-        {
-          submissionId: answer.id,
-          repositoryUrl: answer.repositoryUrl,
-        },
-        handleAnswerCorrectionCallback,
-      );
+      this.messagingProvider.emitChallengeCorrection({
+        submissionId: answer.id,
+        repositoryUrl: answer.repositoryUrl,
+      });
     } catch (err) {
       this.logger.error(
         `Failed to submit answer to correction: ${err.message}`,
