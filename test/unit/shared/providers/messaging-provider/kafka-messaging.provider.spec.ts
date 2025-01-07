@@ -9,11 +9,22 @@ describe('KafkaMessagingProvider', () => {
   let logger: MockProxy<LoggerProvider>;
   let clientKafka: MockProxy<ClientKafka>;
 
-  const mockResponse: ICorrectLessonResponse = {
+  const mockResult: ICorrectLessonResponse = {
     submissionId: '123',
     repositoryUrl: 'https://repo.com',
     grade: 8,
     status: 'Done',
+  };
+
+  const consumerMock = {
+    subscribe: jest.fn(),
+    disconnect: jest.fn(),
+    run: jest.fn(async ({ eachMessage }) => {
+      await eachMessage({
+        topic: 'challenge.correction.reply',
+        message: { value: JSON.stringify(mockResult) },
+      });
+    }),
   };
 
   beforeAll(() => {
@@ -24,10 +35,11 @@ describe('KafkaMessagingProvider', () => {
     clientKafka.close.mockResolvedValue();
     clientKafka.connect.mockResolvedValue({} as any);
     clientKafka.send.mockReturnValue({
-      subscribe: jest.fn((handlers) => {
-        handlers.next(mockResponse);
-      }),
+      subscribe: jest.fn(),
     } as any);
+    clientKafka['client'] = {
+      consumer: jest.fn().mockReturnValue(consumerMock),
+    } as any;
   });
 
   beforeEach(async () => {
@@ -47,6 +59,65 @@ describe('KafkaMessagingProvider', () => {
       expect(clientKafka.subscribeToResponseOf).toHaveBeenCalledWith(
         'challenge.correction',
       );
+      expect(consumerMock.subscribe).toHaveBeenCalledWith({
+        topic: 'challenge.correction.reply',
+      });
+    });
+
+    it('should get consumer instance with right groupId', async () => {
+      // Act
+      await sut.onModuleInit();
+
+      // Assert
+      expect(clientKafka['client'].consumer).toHaveBeenCalledWith({
+        groupId: 'challenge-consumer',
+      });
+    });
+  });
+
+  describe('consumeChallengeCorrectionResponse', () => {
+    it('should be able to call consumer.run with right parameters', async () => {
+      // Arrange
+      await sut.onModuleInit();
+      const callbackService = jest.fn();
+
+      // Act
+      await sut.consumeChallengeCorrectionResponse({ callbackService });
+
+      // Assert
+      expect(consumerMock.run).toHaveBeenCalledWith({
+        eachMessage: expect.any(Function),
+      });
+    });
+
+    it('should be able to call callbackService with kafka message result', async () => {
+      // Arrange
+      await sut.onModuleInit();
+      const callbackService = jest.fn();
+
+      // Act
+      await sut.consumeChallengeCorrectionResponse({ callbackService });
+
+      // Assert
+      expect(callbackService).toHaveBeenCalledWith(mockResult);
+    });
+
+    it('should log error if callbackService throws', async () => {
+      // Arrange
+      await sut.onModuleInit();
+      const loggerSpy = jest.spyOn(logger, 'error');
+      const callbackService = jest
+        .fn()
+        .mockRejectedValueOnce(new Error('Callback error'));
+
+      // Act
+      await sut.consumeChallengeCorrectionResponse({ callbackService });
+
+      // Assert
+      expect(loggerSpy).toHaveBeenCalledWith(
+        'Error in callbackService: Callback error',
+        'KafkaMessagingProvider',
+      );
     });
   });
 
@@ -57,36 +128,15 @@ describe('KafkaMessagingProvider', () => {
       repositoryUrl: 'https://repo.com',
     };
 
-    it('should send the message and call the callback on success', async () => {
-      const callbackService = jest.fn().mockResolvedValueOnce(undefined);
-
+    it('should be able to send the message', async () => {
       // Act
-      sut.emitChallengeCorrection(message, callbackService);
+      sut.emitChallengeCorrection(message);
 
       // Assert
       expect(clientKafka.send).toHaveBeenCalledWith(
         'challenge.correction',
         JSON.stringify(message),
       );
-      expect(callbackService).toHaveBeenCalledWith(mockResponse);
-    });
-
-    it('should handle errors in the callbackService gracefully', async () => {
-      const callbackService = jest
-        .fn()
-        .mockRejectedValueOnce(new Error('Callback error'));
-
-      const loggerSpy = jest
-        .spyOn(logger, 'error')
-        .mockImplementation(() => {});
-
-      // Act
-      sut.emitChallengeCorrection(message, callbackService);
-
-      // Assert
-      expect(callbackService).toHaveBeenCalledWith(mockResponse);
-
-      loggerSpy.mockRestore();
     });
 
     it('should log errors when microservice communication fails', async () => {
@@ -103,7 +153,7 @@ describe('KafkaMessagingProvider', () => {
         .mockImplementation(() => {});
 
       // Act
-      sut.emitChallengeCorrection(message, jest.fn());
+      sut.emitChallengeCorrection(message);
 
       // Assert
       expect(loggerSpy).toHaveBeenCalledWith(
@@ -117,6 +167,8 @@ describe('KafkaMessagingProvider', () => {
 
   describe('onModuleDestroy', () => {
     it('should close the Kafka client', async () => {
+      await sut.onModuleInit();
+
       // Act
       await sut.onModuleDestroy();
 

@@ -29,10 +29,13 @@ describe('Answer Challenge (e2e)', () => {
     producer = kafka.producer({
       createPartitioner: Partitioners.LegacyPartitioner,
     });
-    consumer = kafka.consumer({ groupId: 'challenge-consumer' });
+    consumer = kafka.consumer({ groupId: 'challenge-consumer-test' });
 
     await producer.connect();
     await consumer.connect();
+
+    // Subscribe to the topic to mock a consumer response
+    await consumer.subscribe({ topic: 'challenge.correction' });
 
     // Create a challenge for testing
     const createChallengeMutation = `
@@ -63,7 +66,7 @@ describe('Answer Challenge (e2e)', () => {
       .expectNoErrors();
 
     challengeId = response.data.createChallenge.data.id;
-  }, 10000);
+  }, 20000);
 
   afterAll(async () => {
     await producer.disconnect();
@@ -71,9 +74,6 @@ describe('Answer Challenge (e2e)', () => {
   }, 10000);
 
   it('should answer a challenge and handle the correction response', async () => {
-    // Subscribe to the topic to mock a consumer response
-    await consumer.subscribe({ topic: 'challenge.correction' });
-
     // Start the mock consumer to listen for correction requests and respond
     const correctionResponse = {
       grade: 8,
@@ -114,6 +114,9 @@ describe('Answer Challenge (e2e)', () => {
         },
       });
     });
+
+    // Delay to give time for the consumer to join group
+    await delay(2000);
 
     // Mutation for answering a challenge
     const answerChallengeMutation = `
@@ -161,6 +164,7 @@ describe('Answer Challenge (e2e)', () => {
     // Wait for the mock consumer to finish processing
     await mockConsumer;
 
+    // Delay to give time for the API to handle the consumer reply
     await delay(500);
 
     // Assert the database has the updated answer after correction
