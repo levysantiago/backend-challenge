@@ -8,11 +8,10 @@ import { SubmitAnswerToCorrectionService } from './services/submit-answer-to-cor
 import { UpdateAnswerService } from './services/update-answer.service';
 import { ListAnswersResolver } from './infra/http/resolvers/list-answers.resolver';
 import { ListAnswersService } from './services/list-answers.service';
-import { ScheduleModule } from '@nestjs/schedule';
 import { ConsumeAnswerCorrectionInitialization } from './infra/initialization/consume-answer-correction.initialization';
 
 @Module({
-  imports: [ScheduleModule.forRoot(), ChallengeModule],
+  imports: [ChallengeModule],
   providers: [
     // Repositories
     {
