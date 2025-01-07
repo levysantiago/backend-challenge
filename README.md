@@ -428,14 +428,14 @@ $ yarn test:cov
 
 ## E2E Test
 
-Before running the e2e test, you must run the Kafka broker container specific for testing. To do that you can run:
+Before running the e2e test, you must run the Kafka broker container and PostgreSQL instance specific for testing. To do that you can run:
 
 ```bash
 docker compose -f docker-compose.test.yml up -d
 ```
-`Node`: About the database, a new testing schema is created in the PostgreSQL database on every test suite and deleted after the test is finished.
+`Node`: About the database, a new testing schema is created in the PostgreSQL testing database on every test suite and deleted after the test is finished.
 
-Then, if the new Kafka and Zookeeper containers are up and running, you can run the e2e tests:
+Then, if the new Kafka, Zookeeper and PostgreSQL containers for testing are up and running, you can run the e2e tests:
 
 ```bash
 # e2e tests
