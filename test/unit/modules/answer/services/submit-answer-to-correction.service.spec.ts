@@ -35,7 +35,6 @@ describe('SubmitAnswerToCorrectionService', () => {
         grade: null,
         createdAt: new Date('2024-01-01T00:00:00Z'),
       },
-      handleAnswerCorrectionCallback: jest.fn(),
     };
 
     it('should be able to submit answer to correction', async () => {
@@ -47,13 +46,10 @@ describe('SubmitAnswerToCorrectionService', () => {
       // Act
       sut.execute(mockData);
       // Assert
-      expect(messagingProvider.emitChallengeCorrection).toHaveBeenCalledWith(
-        {
-          submissionId: mockData.answer.id,
-          repositoryUrl: mockData.answer.repositoryUrl,
-        },
-        mockData.handleAnswerCorrectionCallback,
-      );
+      expect(messagingProvider.emitChallengeCorrection).toHaveBeenCalledWith({
+        submissionId: mockData.answer.id,
+        repositoryUrl: mockData.answer.repositoryUrl,
+      });
     });
   });
 });

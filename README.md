@@ -208,7 +208,7 @@ So here are some examples of services from each domain:
 - In Prisma Schema the `CASCADE` option was turned on, so when deleting a Challenge, all Answers related to it will be deleted too. Depending on the project specific needs, might be interesting to keep the Challenge registered in database and just set a new attribute to inform that this registry is deleted/archived. This second option can be used if we want to keep the answers saved and use them as a history of answers even if the Challenge "doesn't exist" anymore.
 
 **UpdateAnswerService as a callback**
-- The `UpdateAnswerService` is sent as a callback for the `SubmitAnswerToCorrectionService` by the `AnswerChallengeResolver`, so that the `SubmitAnswerToCorrectionService` doesn't need to know much about what is the service that will update the answer after receiving the correction response, it just receive a callback and execute it. It was built this way to decouple the dependency between the two services and maintain the consistency.
+- The `UpdateAnswerService` is sent as a callback to `KafkaMessagingProvider` by the `ConsumeAnswerCorrectionInitialization`, so that the `KafkaMessagingProvider` doesn't need to know much about what is the service that will update the answer after receiving the correction response, it just receive a callback and execute it. The `ConsumeAnswerCorrectionInitialization` is a service that starts the Kafka Consumer to keep waiting for a new reply from the corrections microservice.
 
 **Answers list returning also challenge titles**
 - The Answers returned in `ListAnswersService` also returns the challenge title for each answer, this was done by creating a Prisma query in the `PrismaAnswersRepository` that joins the two tables and already returns also the challenge title for the answers listing. I added this feature so that the client can print also from which challenge this answer is from without needing to make another request.
@@ -229,11 +229,7 @@ So here are some examples of services from each domain:
 
 **Submitting Answer Correction**
 
-- To be able to notify the corrections service, a shared interface `MessagingProvider` was created using the `KafkaMessagingProvider` as implementation, this provider is used by the `SubmitAnswerToCorrectionService` to emit the answer to the correction service, and the `SubmitAnswerToCorrectionService` is used inside the `AnswerChallengeResolver` that calls this service right after calling the `AnswerChallengeService` which creates a new `Answer`.
-
-**Pending Answer Correction Worker**
-
-- In order to add a new "correction layer" to ensure that the Answer will be corrected, I created a worker that on every hour verifies if there is any Answer that was not corrected yet ("Pending"). This worker was created to handle cases where the API for some reason missed the `challenges.correction.reply` topic, so this worker keeps checking if there is any pending answer, and if there is, it emits `challenges.correction` topic to the correction service again.
+- To be able to notify the corrections service, a shared interface `MessagingProvider` was created using the `KafkaMessagingProvider` as implementation, this provider is used by the `SubmitAnswerToCorrectionService` to emit the answer to the correction service, and the `SubmitAnswerToCorrectionService` is used inside the `AnswerChallengeResolver` that calls this service right after calling the `AnswerChallengeService` which creates a new `Answer`. Then it is created a new message to `challenge.correction` topic, the correction microservice process it and reply on `challenges.correction.reply`, so the API catches the reply message on the `KafkaMessagingProvider` consumer that were started by the `ConsumeAnswerCorrectionInitialization`.
 
 ### Non-Functional Requirements
 
@@ -432,14 +428,14 @@ $ yarn test:cov
 
 ## E2E Test
 
-Before running the e2e test, you must run the Kafka broker container specific for testing. To do that you can run:
+Before running the e2e test, you must run the Kafka broker container and PostgreSQL instance specific for testing. To do that you can run:
 
 ```bash
 docker compose -f docker-compose.test.yml up -d
 ```
-`Node`: About the database, a new testing schema is created in the PostgreSQL database on every test suite and deleted after the test is finished.
+`Node`: About the database, a new testing schema is created in the PostgreSQL testing database on every test suite and deleted after the test is finished.
 
-Then, if the new Kafka and Zookeeper containers are up and running, you can run the e2e tests:
+Then, if the new Kafka, Zookeeper and PostgreSQL containers for testing are up and running, you can run the e2e tests:
 
 ```bash
 # e2e tests

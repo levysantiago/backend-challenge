@@ -12,6 +12,7 @@ export async function createApp(): Promise<INestApplication> {
     providers: [
       {
         provide: LoggerProvider,
+        // useClass: NestjsLoggerProvider,
         useValue: {
           log: jest.fn(),
           fatal: jest.fn(),
